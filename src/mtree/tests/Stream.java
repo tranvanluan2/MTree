@@ -43,7 +43,7 @@ public class Stream {
         else if(type=="tagData")
         {
             streamInstance = new Stream();
-            streamInstance.getData(Constants.tagFileName4);
+            streamInstance.getData(Constants.tagCALC);
             return streamInstance;
         }
         else {

@@ -1,25 +1,13 @@
 package outlierdetection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 import mtree.tests.Data;
 import mtree.utils.Constants;
 
-public class Lazy_Update_Event {
-
-    public static PriorityQueue<DataLUEObject> eventQueue = new PriorityQueue<DataLUEObject>(
-            new DataLUEComparator());
-    public static ArrayList<Data> outlierList = new ArrayList<Data>();
-    public static MTreeClass mtree = new MTreeClass();
-    // store list id in increasing time arrival order
-    public static ArrayList<DataLUEObject> dataList = new ArrayList<DataLUEObject>();
+public class Direct_Update_Event extends Lazy_Update_Event {
 
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
 
@@ -29,16 +17,15 @@ public class Lazy_Update_Event {
         ArrayList<DataLUEObject> expiredData = new ArrayList<DataLUEObject>();
         int index = -1;
         for (int i = 0; i < dataList.size(); i++) {
-            Data d = dataList.get(i);
+            DataLUEObject d = dataList.get(i);
             if (d.arrivalTime <= currentTime - W) {
                 // mark here for removing data from datalist later
                 index = i;
                 // remove from mtree
                 mtree.remove(d);
-                
 
                 // dataList.remove(i);
-                expiredData.add((DataLUEObject)d);
+                expiredData.add(d);
 
             } else {
                 break;
@@ -57,22 +44,43 @@ public class Lazy_Update_Event {
              * do range query for ob
              */
             MTreeClass.Query query = mtree.getNearestByRange(p, Constants.R);
+
             for (MTreeClass.ResultItem ri : query) {
                 if (ri.distance == 0) p.values[0] += (new Random()).nextDouble() / 1000000;
+
                 DataLUEObject q = (DataLUEObject) ri.data;
+
                 q.numberSuccedingNeighbors = q.numberSuccedingNeighbors + 1;
+
                 p.p_neighbors.add(q.expireTime);
+
                 if (outlierList.contains(q)) {
                     if (q.p_neighbors.size() + q.numberSuccedingNeighbors == Constants.k) {
                         outlierList.remove(q);
                         if (q.numberSuccedingNeighbors < Constants.k && q.p_neighbors.size() > 0) {
+
                             q.ev = min(q.p_neighbors);
                             eventQueue.add(q);
                         }
                     }
                 } else {
-                    q.p_neighbors.remove(minIndex(q.p_neighbors));
+
                     if (q.numberSuccedingNeighbors >= Constants.k) eventQueue.remove(q);
+
+                    else {
+
+                        q.p_neighbors.remove(minIndex(q.p_neighbors));
+                        Collections.sort(q.p_neighbors);
+                        while (q.p_neighbors.size() > Constants.k - q.numberSuccedingNeighbors)
+                            q.p_neighbors.remove(0);
+                        q.ev = min(q.p_neighbors);
+                        eventQueue.remove(q);
+                        // if(q.p_neighbors.size() + q.numberSuccedingNeighbors != Constants.k)
+                        // System.out.println("Cho nay dfdf Sai me roi!: "+ (q.p_neighbors.size() +
+                        // q.numberSuccedingNeighbors));
+                        eventQueue.add(q);
+                    }
+
                 }
             }
 
@@ -82,7 +90,11 @@ public class Lazy_Update_Event {
 
             if (p.p_neighbors.size() < Constants.k) outlierList.add(p);
             else {
+
+                if (p.p_neighbors.size() + p.numberSuccedingNeighbors != Constants.k) System.out
+                        .println("Cho nay Sai me roi!");
                 p.ev = min(p.p_neighbors);
+
                 eventQueue.add(p);
             }
 
@@ -93,45 +105,14 @@ public class Lazy_Update_Event {
         return outlierList;
     }
 
-    public Integer minIndex(ArrayList<Integer> objects) {
-        if (objects.size() == 0) return null;
-        int result = 0;
-        Integer min = objects.get(0);
-        for (int i = 0; i<objects.size(); i++) {
-            if (objects.get(i) < min) result = i;
-        }
-        return result;
-    }
-
-    public int min(ArrayList<Integer> objects) {
-        int min = objects.get(0);
-        for (Integer d : objects) {
-            if (d< min) min = d;
-        }
-        return min;
-    }
-
     private void process_event_queue(ArrayList<DataLUEObject> expireData, int currentTime) {
         DataLUEObject x = eventQueue.peek();
 
         while (x != null && x.ev <= currentTime) {
 
             x = eventQueue.poll();
-            // remove p from x
-            // if (x.p_neighbors.contains(p)) {
-            
-            for (int i = x.p_neighbors.size()-1; i >=0 ; i--)
-                if(x.p_neighbors.get(i) <= currentTime)
-                    x.p_neighbors.remove(i);
 
-            if (x.p_neighbors.size() + x.numberSuccedingNeighbors < Constants.k) {
-                outlierList.add(x);
-
-            } else {
-                x.ev = min(x.p_neighbors);
-                eventQueue.add(x);
-            }
-            // }
+            outlierList.add(x);
             x = eventQueue.peek();
         }
 
@@ -143,45 +124,9 @@ public class Lazy_Update_Event {
 
                 DataLUEObject d = (DataLUEObject) outlierList.get(i);
 
-                d.p_neighbors.remove(p.expireTime);
+                for (int j = d.p_neighbors.size() - 1; j >= 0; j--)
+                    if (d.p_neighbors.get(j) <= p.expireTime) d.p_neighbors.remove(j);
             }
-
-        
-
-    }
-
-}
-
-class DataLUEComparator implements Comparator<DataLUEObject> {
-    @Override
-    public int compare(DataLUEObject o1, DataLUEObject o2) {
-        if (o1.ev < o2.ev) return -1;
-        else if (o1.ev == o2.ev) return 0;
-        else return 1;
-    }
-};
-
-class DataExpireTimeLUEComparator implements Comparator<DataLUEObject> {
-    @Override
-    public int compare(DataLUEObject o1, DataLUEObject o2) {
-        if (o1.expireTime < o2.expireTime) return -1;
-        else if (o1.expireTime == o2.expireTime) return 0;
-        else return 1;
-    }
-};
-
-class DataLUEObject extends Data {
-
-    public int expireTime;
-    public int numberSuccedingNeighbors;
-    public int ev;
-    public ArrayList<Integer> p_neighbors = new ArrayList<Integer>();
-
-    public DataLUEObject(Data d, int currentTime) {
-        super();
-        this.expireTime = d.arrivalTime + Constants.W;
-        this.values = d.values;
-        this.arrivalTime = d.arrivalTime;
 
     }
 

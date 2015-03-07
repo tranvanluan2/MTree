@@ -14,7 +14,11 @@ public class CompareResult {
     
     public static void main(String[] args) throws IOException{
         
-        double[] result = compare("C:\\Users\\Luan\\MTree\\abstractC30_5.txt", "C:\\Users\\Luan\\MTree\\errorList.txt");
+        double[] result = compare("C:\\Users\\Luan\\MTree\\abstractC50_20.txt", "C:\\Users\\Luan\\MTree\\trueErrorDetection.txt");
+        System.out.println("Precison: "+result[0]);
+        System.out.println("Recall: "+result[1]);
+        
+        result = compare("C:\\Users\\Luan\\MTree\\abstractC50_20.txt", "C:\\Users\\Luan\\MTree\\trueErrorDetection_1000.txt");
         System.out.println("Precison: "+result[0]);
         System.out.println("Recall: "+result[1]);
     }
@@ -52,8 +56,23 @@ public class CompareResult {
              if(approxValues.contains(i))
                  recall++;
          }
+        
+         
+         /**
+          * print confusion matrix
+          */
+         
+         double cf2 = precision/exactValues.size();
+         double cf1 = 1 - cf2;
+         double cf4 = (approxValues.size() - precision) /(1302 - exactValues.size());
+         double cf3 = 1 - cf4;
+         System.out.println(String.format( "%.2f", cf1 ) + " "+ String.format( "%.2f", cf2 ) );
+
+         System.out.println(String.format( "%.2f", cf3 ) + " "+ String.format( "%.2f", cf4 ) );
+         
          precision = precision *1.0/ approxValues.size();
          recall = recall *1.0/ exactValues.size();
+         System.out.println("F1 = "+ (2*precision*recall)/(precision+recall));
          return new double[]{precision, recall};
     }
 }

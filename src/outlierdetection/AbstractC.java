@@ -107,11 +107,22 @@ public class AbstractC {
 //            d.lt_cnt = Utils.removeFirstElement(d.lt_cnt);
         }
        
+        System.out.println("Outliers: ");
+        for (Data o : outliers) {
+            System.out.print(o.values[0] + " ; ");
+        }
+        System.out.println();
+        System.out.println("Data list: ");
+        for (Data o : dataList) {
+            System.out.print(o.values[0] + " ; ");
+        }
+        System.out.println();
         return outliers;
     }
 
 
 };
+
 
 
 

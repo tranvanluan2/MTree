@@ -15,8 +15,10 @@ import java.util.Set;
 
 import outlierdetection.AbstractC;
 import outlierdetection.ApproxStorm;
+import outlierdetection.Direct_Update_Event;
 import outlierdetection.ExactStorm;
 import outlierdetection.Lazy_Update_Event;
+import outlierdetection.MicroCluster;
 import mtree.ComposedSplitFunction;
 import mtree.DistanceFunction;
 import mtree.DistanceFunctions;
@@ -42,16 +44,18 @@ public class MTTest {
     
     public static HashSet<Integer> idOutliers = new HashSet<>();
     public static void main(String[] args){
-//        Stream s = Stream.getInstance("ForestCover");
+        Stream s = Stream.getInstance("ForestCover");
 //        Stream s = Stream.getInstance("TAO");
 //        Stream s = Stream.getInstance("randomData");
 //        Stream s = Stream.getInstance(null);
-        Stream s = Stream.getInstance("tagData");
+//        Stream s = Stream.getInstance("tagData");
 
         ExactStorm estorm = new ExactStorm();
         ApproxStorm apStorm = new ApproxStorm(0.1);
         AbstractC abstractC = new AbstractC();
         Lazy_Update_Event lue = new Lazy_Update_Event();
+        Direct_Update_Event due = new Direct_Update_Event();
+        MicroCluster micro = new MicroCluster();
         int numberWindows = 0;
         double totalTime = 0;
         while(!stop && s.hasNext()){
@@ -82,8 +86,10 @@ public class MTTest {
             
 //            ArrayList<Data> outliers = estorm.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
 //            ArrayList<Data> outliers = apStorm.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
-            ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
+//            ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
 //            ArrayList<Data> outliers = lue.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
+//            ArrayList<Data> outliers = micro.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
+            ArrayList<Data> outliers = due.detectOutlier(incomingData, currentTime,Constants.W, Constants.slide);
             
          // Segment to monitor
             double elapsedTimeInSec = (System.nanoTime() - start) * 1.0e-9;   
@@ -93,6 +99,7 @@ public class MTTest {
                 
                 idOutliers.add(outlier.arrivalTime);
             }
+            
             
             System.out.println("Total #outliers: "+idOutliers.size());
             System.out.println("------------------------------------");
@@ -108,8 +115,10 @@ public class MTTest {
 //        String filename = Constants.outputStorm+Constants.W+"_"+Constants.slide+".txt";
 
 //        String filename = Constants.outputapStorm+Constants.W+"_"+Constants.slide+"__0.1"+".txt";
-        String filename = Constants.outputabstractC+Constants.W+"_"+Constants.slide+".txt";
+//        String filename = Constants.outputabstractC+Constants.W+"_"+Constants.slide+".txt";
 //        String filename = Constants.outputLUE+Constants.W+"_"+Constants.slide+".txt";
+//        String filename = Constants.outputMicro+Constants.W+"_"+Constants.slide+".txt";
+        String filename = Constants.outputDUE+Constants.W+"_"+Constants.slide+".txt";
         
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
