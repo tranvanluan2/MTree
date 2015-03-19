@@ -1,11 +1,8 @@
 package outlierdetection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -25,14 +22,14 @@ public class ExactStorm {
     public static MTreeClass mtree = new MTreeClass();
 
     // store list id in increasing time arrival order
-    public static ArrayList<DataStormObject> dataList = new ArrayList<DataStormObject>();
+    public static ArrayList<DataStormObject> dataList = new ArrayList<>();
 
     public ExactStorm() {
 
     }
 
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
-        ArrayList<Data> outliers = new ArrayList<Data>();
+        ArrayList<Data> outliers = new ArrayList<>();
 
         /**
          * remove expired data from dataList and mtree
@@ -54,6 +51,8 @@ public class ExactStorm {
             dataList.remove(i);
         }
 
+        
+        
         for (Data d : data) {
 
             DataStormObject ob = new DataStormObject(d);
@@ -62,33 +61,25 @@ public class ExactStorm {
              */
             MTreeClass.Query query = mtree.getNearestByRange(ob, Constants.R);
 
-            ArrayList<DataStormObject> queryResult = new ArrayList<DataStormObject>();
+            ArrayList<DataStormObject> queryResult = new ArrayList<>();
             for (MTreeClass.ResultItem ri : query) {
                 queryResult.add((DataStormObject) ri.data);
-                if (ri.distance == 0) ob.values[0] += (new Random()).nextDouble() / 1000;
+                if (ri.distance == 0) ob.values[0] += (new Random()).nextDouble() / 1000000;
             }
 
             Collections.sort(queryResult, new DataStormComparator());
 
-            for (int i = 0; i < queryResult.size(); i++) {
-
-                /**
-                 * update neighbor for new ob and its neighbor's
-                 */
-                DataStormObject dod = queryResult.get(i);
-
-                if (dod != null) {
-
-                    if (ob.nn_before.size() < Constants.k) ob.nn_before.add(dod);
-
-                    dod.count_after++;
-                }
-
-            }
+            queryResult.stream().filter((dod) -> (dod.arrivalTime >= currentTime - Constants.W)).filter((dod) -> (dod != null)).map((dod) -> {
+                if (ob.nn_before.size() < Constants.k) ob.nn_before.add(dod);
+                return dod;
+            }).forEach((dod) -> {
+                dod.count_after++;
+            });//                Utils.computeUsedMemory();
 
             /**
              * store object into mtree
              */
+//            Utils.computeUsedMemory();
             mtree.add(ob);
 
             dataList.add(ob);
@@ -96,36 +87,29 @@ public class ExactStorm {
         }
 
         // do outlier detection
-        int count_outlier = 0;
-        for (DataStormObject d : dataList) {
+        dataList.stream().forEach((d) -> {
             /**
              * Count preceeding neighbors
              */
             // System.out.println(d.values[0]);
             int pre = 0;
-            for (int i = 0; i < d.nn_before.size(); i++) {
-                if (d.nn_before.get(i).arrivalTime > currentTime - W) {
-                    pre++;
-                }
-            }
+            pre = d.nn_before.stream().filter((nn_before) -> (nn_before.arrivalTime > currentTime - W)).map((_item) -> 1).reduce(pre, Integer::sum);
             if (pre + d.count_after < Constants.k) {
-                count_outlier++;
-                // System.out.println("Outlier: "+d.values[0]);
                 outliers.add(d);
             }
-        }
-        // System.out.println("#outliers: "+count_outlier);
+        }); // System.out.println("#outliers: "+count_outlier);
 
-        System.out.println("Outliers: ");
-        for (Data o : outliers) {
-            System.out.print(o.values[0] + " ; ");
-        }
-        System.out.println();
-        System.out.println("Data list: ");
-        for (Data o : dataList) {
-            System.out.print(o.values[0] + " ; ");
-        }
-        System.out.println();
+        // System.out.println("Outliers: ");
+        // for (Data o : outliers) {
+        // System.out.print(o.values[0] + " ; ");
+        // }
+        // System.out.println();
+        // System.out.println("Data list: ");
+        // for (Data o : dataList) {
+        // System.out.print(o.values[0] + " ; ");
+        // }
+        // System.out.println();
+        Utils.computeUsedMemory();
         return outliers;
     }
 }
@@ -177,7 +161,7 @@ class DataStormObject extends Data {
 
     public DataStormObject(Data d) {
         super();
-        nn_before = new ArrayList<DataStormObject>();
+        nn_before = new ArrayList<>();
         this.arrivalTime = d.arrivalTime;
         this.values = d.values;
 

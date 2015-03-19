@@ -2,6 +2,7 @@ package outlierdetection;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
 import java.util.Random;
 
 import mtree.tests.Data;
@@ -58,7 +59,7 @@ public class ApproxStorm extends ExactStorm {
             ArrayList<DataStormObject> queryResult = new ArrayList<DataStormObject>();
             for (MTreeClass.ResultItem ri : query) {
                 queryResult.add((DataStormObject) ri.data);
-                if (ri.distance == 0) ob.values[0] += (new Random()).nextDouble() / 1000;
+                if (ri.distance == 0) ob.values[0] += (new Random()).nextDouble() / 1000000;
             }
 
             Collections.sort(queryResult, new DataStormComparator());
@@ -84,15 +85,16 @@ public class ApproxStorm extends ExactStorm {
                      */
                     if (currentTime > W && dod.count_after >= Constants.k) {
                         // check if # of safe inliers > pW
+                        
                         if (safeInlierList.size() >= (int) Constants.W * p) {
                             // remove randomly a safe inliers
                             int r_index = (new Random()).nextInt(safeInlierList.size());
                             DataStormObject remove = safeInlierList.get(r_index);
-                            safeInlierList.remove(remove);
+                            safeInlierList.remove(r_index);
                             dataList.remove(remove);
                             mtree.remove(remove);
-
-                        }
+                            remove = null;
+                        } 
                         safeInlierList.add(dod);
                     }
                 }
@@ -124,15 +126,16 @@ public class ApproxStorm extends ExactStorm {
              */
 
             // check if # of safe inliers > pW
-            if (safeInlierList.size() >= (int) Constants.W * p) {
+            /**
+            while (safeInlierList.size() >= (int) Constants.W * p) {
                 // remove randomly a safe inliers
                 int r_index = (new Random()).nextInt(safeInlierList.size());
                 DataStormObject remove = safeInlierList.get(r_index);
-                safeInlierList.remove(remove);
+                safeInlierList.remove(r_index);
                 dataList.remove(remove);
                 mtree.remove(remove);
             }
-
+*/
             // update frac_before for all object in window
             for (DataStormObject d : dataList) {
                 d.frac_before = d.nn_before.size() * 1.0 / safeInlierList.size();
@@ -155,6 +158,7 @@ public class ApproxStorm extends ExactStorm {
         }
         // System.out.println("#outliers: "+count_outlier);
 
+//        Utils.computeUsedMemory();
         return outliers;
     }
 

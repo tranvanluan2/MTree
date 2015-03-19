@@ -10,6 +10,9 @@ import java.util.Random;
  * Some utilities.
  */
 public final class Utils {
+    public static long peakUsedMemory = 0;
+
+    private static final int MegaBytes = 10241024;
 
     /**
      * Don't let anyone instantiate this class.
@@ -79,6 +82,21 @@ public final class Utils {
 	        r[i-1] = x[i];
 	    }
 	    return r;
+	}
+	
+	public static void computeUsedMemory(){
+	    
+	    long freeMemory = Runtime.getRuntime().freeMemory()/MegaBytes;
+        long maxMemory = Runtime.getRuntime().maxMemory()/MegaBytes;
+        long usedMemory = (maxMemory - freeMemory);
+
+        
+        if(peakUsedMemory < usedMemory){
+            peakUsedMemory = usedMemory;
+           
+        }
+//        System.out.println("Peak memory: " + peakUsedMemory);
+
 	}
 	
 }

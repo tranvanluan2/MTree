@@ -37,7 +37,37 @@ public class Stream {
         else if(type=="randomData")
         {
             streamInstance = new Stream();
-            streamInstance.getData(Constants.randomFileName);
+            streamInstance.getData(Constants.randomFileName1111);
+            return streamInstance;
+        }
+        else if(type=="randomData0.001")
+        {
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.randomFileName001);
+            return streamInstance;
+        }
+        else if(type=="randomData0.01")
+        {
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.randomFileName01);
+            return streamInstance;
+        }
+        else if(type=="randomData0.1")
+        {
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.randomFileName1);
+            return streamInstance;
+        }
+        else if(type=="randomData1")
+        {
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.randomFileName1percent);
+            return streamInstance;
+        }
+        else if(type=="randomData10")
+        {
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.randomFileName10percent);
             return streamInstance;
         }
         else if(type=="tagData")

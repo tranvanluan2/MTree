@@ -43,6 +43,7 @@ public class Data implements EuclideanCoordinate, Comparable<Data> {
 	public boolean equals(Object obj) {
 		if(obj instanceof Data) {
 			Data that = (Data) obj;
+			if(this.arrivalTime != that.arrivalTime) return false;
 			if(this.dimensions() != that.dimensions()) {
 				return false;
 			}
