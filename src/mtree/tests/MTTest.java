@@ -30,9 +30,10 @@ public class MTTest {
          Stream s = Stream.getInstance("ForestCover");
 //         Stream s = Stream.getInstance("TAO");
 //         Stream s = Stream.getInstance("randomData");
-//        Stream s = Stream.getInstance("randomData0.1");
+//        Stream s = Stream.getInstance("randomData1");
         // Stream s = Stream.getInstance(null);
         // Stream s = Stream.getInstance("tagData");
+//        Stream s = Stream.getInstance("Trade");
 
         ExactStorm estorm = new ExactStorm();
         ApproxStorm apStorm = new ApproxStorm(1);
@@ -80,10 +81,10 @@ public class MTTest {
 //             Constants.slide);
 //             ArrayList<Data> outliers = apStorm.detectOutlier(incomingData, currentTime,Constants.W,
 //             Constants.slide);
-             ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W,
-             Constants.slide);
-//            ArrayList<DataLUEObject> outliers = lue.detectOutlier(incomingData, currentTime, Constants.W,
-//                Constants.slide);
+//             ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W,
+//             Constants.slide);
+            HashSet<DataLUEObject> outliers = lue.detectOutlier(incomingData, currentTime, Constants.W,
+                Constants.slide);
 //             ArrayList<Data> outliers = micro.detectOutlier(incomingData, currentTime,Constants.W,
 //             Constants.slide);
 //             ArrayList<DataLUEObject> outliers = due.detectOutlier(incomingData, currentTime,Constants.W,

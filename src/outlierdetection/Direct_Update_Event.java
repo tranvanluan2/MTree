@@ -2,6 +2,7 @@ package outlierdetection;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
 
 import mtree.tests.Data;
@@ -10,7 +11,7 @@ import mtree.utils.FibonacciHeap.Node;
 
 public class Direct_Update_Event extends Lazy_Update_Event {
 
-    public ArrayList<DataLUEObject> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
+    public HashSet<DataLUEObject> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
 
         /**
          * remove expired data from dataList and mtree
