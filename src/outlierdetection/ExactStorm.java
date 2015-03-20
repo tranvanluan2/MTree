@@ -109,7 +109,7 @@ public class ExactStorm {
         // System.out.print(o.values[0] + " ; ");
         // }
         // System.out.println();
-        Utils.computeUsedMemory();
+//        Utils.computeUsedMemory();
         return outliers;
     }
 }

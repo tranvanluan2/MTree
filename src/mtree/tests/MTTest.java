@@ -27,8 +27,8 @@ public class MTTest {
     public static HashSet<Integer> idOutliers = new HashSet<>();
 
     public static void main(String[] args) {
-//         Stream s = Stream.getInstance("ForestCover");
-         Stream s = Stream.getInstance("TAO");
+         Stream s = Stream.getInstance("ForestCover");
+//         Stream s = Stream.getInstance("TAO");
 //         Stream s = Stream.getInstance("randomData");
 //        Stream s = Stream.getInstance("randomData0.1");
         // Stream s = Stream.getInstance(null);
@@ -80,16 +80,16 @@ public class MTTest {
 //             Constants.slide);
 //             ArrayList<Data> outliers = apStorm.detectOutlier(incomingData, currentTime,Constants.W,
 //             Constants.slide);
-//             ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
+             ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W,
+             Constants.slide);
 //            ArrayList<DataLUEObject> outliers = lue.detectOutlier(incomingData, currentTime, Constants.W,
 //                Constants.slide);
 //             ArrayList<Data> outliers = micro.detectOutlier(incomingData, currentTime,Constants.W,
 //             Constants.slide);
 //             ArrayList<DataLUEObject> outliers = due.detectOutlier(incomingData, currentTime,Constants.W,
 //             Constants.slide);
-             HashSet<Data> outliers = mesi.detectOutlier(incomingData, currentTime,Constants.W,
-             Constants.slide);
+//             HashSet<Data> outliers = mesi.detectOutlier(incomingData, currentTime,Constants.W,
+//             Constants.slide);
 
             // Segment to monitor
             double elapsedTimeInSec = (System.nanoTime() - start) * 1.0e-9;

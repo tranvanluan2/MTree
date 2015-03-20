@@ -2,6 +2,7 @@ package outlierdetection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 import mtree.tests.Data;
@@ -45,7 +46,7 @@ public class AbstractC {
 
      
 
-        data.stream().map((d) -> new DataAbtractCObject(d, currentTime)).map((dac) -> {
+        data.stream().map((d) -> new DataAbtractCObject(d, currentTime)).map((DataAbtractCObject dac) -> {
             /**
              * do range query for ob
              */
@@ -61,9 +62,9 @@ public class AbstractC {
                     /**
                      * update lnt_count
                      */
-                    for (int n = 0; n < object.lt_cnt.length; n++) {
-                        object.lt_cnt[n]++;
-                        dac.lt_cnt[n]++;
+                    for (int n = 0; object.lt_cnt.size() > n; n++) {
+                        object.lt_cnt.set(n,object.lt_cnt.get(n)+1);
+                        dac.lt_cnt.set(n,object.lt_cnt.get(n)+1);
                     }
                 }
             }
@@ -83,16 +84,18 @@ public class AbstractC {
 
         // do outlier detection
         dataList.stream().map((d) -> {
-            if (d.lt_cnt[0] < Constants.k) {
+            if (d.lt_cnt.get(0) < Constants.k) {
 
                 outliers.add(d);
 
             }
             return d;
         }).forEach((d) -> {
-            Integer[] temp = new Integer[d.lt_cnt.length - 1];
-            System.arraycopy(d.lt_cnt, 1, temp, 0, d.lt_cnt.length - 1);
-            d.lt_cnt = temp;
+//            Integer[] temp = new Integer[d.lt_cnt.length - 1];
+//            System.arraycopy(d.lt_cnt, 1, temp, 0, d.lt_cnt.length - 1);
+//            d.lt_cnt = temp;
+            if(!d.lt_cnt.isEmpty())
+            d.lt_cnt.remove(0);
         }); // System.out.println("Outliers: ");
         // for (Data o : outliers) {
         // System.out.print(o.values[0] + " ; ");
@@ -113,15 +116,14 @@ public class AbstractC {
 
 class DataAbtractCObject extends Data {
 
-    public Integer[] lt_cnt;
+    public ArrayList<Integer> lt_cnt;
 
     public DataAbtractCObject(Data d, int currentTime) {
         super();
         this.arrivalTime = d.arrivalTime;
         this.values = d.values;
         int lifespan = (int) Math.ceil((arrivalTime - currentTime + Constants.W) * 1.0 / Constants.slide);
-        lt_cnt = new Integer[lifespan];
-        Arrays.fill(lt_cnt, 0);
+        lt_cnt = new ArrayList<>(Collections.nCopies(lifespan, 0));
     }
 
 }

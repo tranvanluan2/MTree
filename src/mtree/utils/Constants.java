@@ -2,11 +2,11 @@ package mtree.utils;
 
 public class Constants {
     
-    public static double R = 1;
+    public static double R = 1000;
     public static int k = 30;
-    public static int W = 5000;
+    public static int W = 15000;
     
-    public static int slide = 1;
+    public static int slide = 50;
     
     public static String forestCoverFileName = "C:\\Users\\Luan\\MTree\\covtype.data";
     public static String taoFileName = "C:\\Users\\Luan\\MTree\\tao.txt";
