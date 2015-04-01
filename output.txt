@@ -1,0 +1,192 @@
+----------------------------------------
+Algorithm=microCluster
+R=1.0;k=30;W=10000;slide=500
+Peak Memory = 433.67236328125
+CPU time = 1.106269329805556
+----------------------------------------
+Algorithm=microCluster
+R=1.0;k=30;W=5000;slide=500
+Peak Memory = 422.63843536376953
+CPU time = 0.8213795211666668
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\tao.txt
+R=1.0;k=30;W=5000;slide=500
+Number Window = 35
+Peak Memory = 2.0842666625976562
+CPU time = NaN
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1000.0;k=5;W=5000;slide=500
+Number Window = 35
+Peak Memory = 1008.0371246337891
+CPU time = 0.2901025612222222
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1000.0;k=5;W=5000;slide=500
+Number Window = 35
+Peak Memory = 1017.6767272949219
+CPU time = 0.27884928930555564
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=5;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1043.4154434204102
+CPU time = 8.269620607138888
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=5;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1055.9522323608398
+CPU time = 8.09141586052778
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 985.4172821044922
+CPU time = 0.21113888888888888
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1000.9218826293945
+CPU time = 0.23291666666666672
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 980.816291809082
+CPU time = 0.22130555555555553
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1007.181640625
+CPU time = 0.22683333333333333
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 984.1734466552734
+CPU time = 0.23238888888888898
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1002.4614486694336
+CPU time = 0.2509722222222222
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 997.0173034667969
+CPU time = 0.23199999999999996
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 985.0877304077148
+CPU time = 0.22769444444444448
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 2245.690788269043
+CPU time = 0.2318611111111111
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1005.1803741455078
+CPU time = 0.2268055555555556
+----------------------------------------
+Algorithm=abstractC
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 999.7214660644531
+CPU time = 0.22241666666666665
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 900.4117660522461
+CPU time = 0.0336388888888889
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 989.9562759399414
+CPU time = 0.3684444444444445
+----------------------------------------
+Algorithm=lue
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1012.3967208862305
+CPU time = 0.2765277777777777
+----------------------------------------
+Algorithm=due
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1001.3774566650391
+CPU time = 0.26397222222222216
+----------------------------------------
+Algorithm=lue
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1003.507926940918
+CPU time = 0.2680277777777778
+----------------------------------------
+Algorithm=due
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1002.0724258422852
+CPU time = 0.2552222222222222
+----------------------------------------
+Algorithm=due
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 35
+Peak Memory = 1022.2838897705078
+CPU time = 0.2624722222222222
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\stt2.txt
+R=50.0;k=50;W=10000;slide=500
+Number Window = 35
+Peak Memory = 167.81610107421875
+CPU time = 0.01841666666666667
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\stt2.txt
+R=50.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 631.3090133666992
+CPU time = 0.006457912457912482
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\stt2.txt
+R=10.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 694.4647903442383
+CPU time = 0.017317460317460228

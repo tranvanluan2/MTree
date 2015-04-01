@@ -20,60 +20,75 @@ public class Stream {
     public static Stream streamInstance;
     
     public static Stream getInstance(String type){
+        
+        
         if(streamInstance!= null)
             return streamInstance;
-        else if(type == "ForestCover")
+        else if(!Constants.dataFile.trim().equals("")){
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.dataFile);
+            return streamInstance;
+        }
+        return null;
+        /**
+        else if("ForestCover".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.forestCoverFileName);
             return streamInstance;
         }
-        else if(type=="TAO")
+        else if("TAO".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.taoFileName);
             return streamInstance;
         }
-        else if(type=="randomData")
+        else if("randomData".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName1111);
             return streamInstance;
         }
-        else if(type=="randomData0.001")
+        else if("randomData0.001".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName001);
             return streamInstance;
         }
-        else if(type=="randomData0.01")
+        else if("randomData0.01".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName01);
             return streamInstance;
         }
-        else if(type=="randomData0.1")
+        else if("randomData0.1".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName1);
             return streamInstance;
         }
-        else if(type=="randomData1")
+        else if("randomData1".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName1percent);
             return streamInstance;
         }
-        else if(type=="randomData10")
+        else if("randomData10".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName10percent);
             return streamInstance;
         }
-        else if(type=="tagData")
+        else if("tagData".equals(type))
         {
             streamInstance = new Stream();
             streamInstance.getData(Constants.tagCALC);
+            return streamInstance;
+        }
+        else if("Trade".equals(type))
+        {
+            streamInstance = new Stream();
+            streamInstance.getData(Constants.STT);
             return streamInstance;
         }
         else {
@@ -82,6 +97,7 @@ public class Stream {
             return streamInstance;
             
         }
+        */
     }
     
     

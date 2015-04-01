@@ -26,9 +26,16 @@ public class MTTest {
 
     public static HashSet<Integer> idOutliers = new HashSet<>();
 
+    public static String algorithm;
+
     public static void main(String[] args) {
-         Stream s = Stream.getInstance("ForestCover");
-//         Stream s = Stream.getInstance("TAO");
+
+        readArguments(args);
+
+        MesureMemoryThread mesureThread = new MesureMemoryThread();
+        mesureThread.start();
+//         Stream s = Stream.getInstance("ForestCover");
+        Stream s = Stream.getInstance("TAO");
 //         Stream s = Stream.getInstance("randomData");
 //        Stream s = Stream.getInstance("randomData1");
         // Stream s = Stream.getInstance(null);
@@ -47,21 +54,10 @@ public class MTTest {
         while (!stop && s.hasNext()) {
 
             numberWindows++;
-            if(numberWindows == 4323)
-                System.out.println();
-            if (numberWindows < 10){
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+            if (Constants.numberWindow != -1 && numberWindows > Constants.numberWindow) {
+                break;
             }
-            if (numberWindows == 1000) try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-            }
-            if (numberWindows > 10000) break;
+
             ArrayList<Data> incomingData;
             if (currentTime != 0) {
                 incomingData = s.getIncomingData(currentTime, Constants.slide);
@@ -71,52 +67,84 @@ public class MTTest {
                 currentTime = currentTime + Constants.W;
             }
 
-            long start = System.nanoTime(); // requires java 1.5
+            long start = System.currentTimeMillis(); // requires java 1.5
 
             /**
              * do algorithm
              */
-//
-//             ArrayList<Data> outliers = estorm.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
-//             ArrayList<Data> outliers = apStorm.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
-//             ArrayList<Data> outliers = abstractC.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
-            HashSet<DataLUEObject> outliers = lue.detectOutlier(incomingData, currentTime, Constants.W,
-                Constants.slide);
-//             ArrayList<Data> outliers = micro.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
-//             ArrayList<DataLUEObject> outliers = due.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
-//             HashSet<Data> outliers = mesi.detectOutlier(incomingData, currentTime,Constants.W,
-//             Constants.slide);
+            switch (algorithm) {
+                case "exactStorm":
+                    ArrayList<Data> outliers = estorm.detectOutlier(incomingData, currentTime, Constants.W, Constants.slide);
+                    outliers.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+                    });
+                    break;
+                case "approximateStorm":
+                    ArrayList<Data> outliers2 = apStorm.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    outliers2.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+                    });
+                    break;
+                case "abstractC":
+                    ArrayList<Data> outliers3 = abstractC.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    outliers3.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
 
-            // Segment to monitor
-            double elapsedTimeInSec = (System.nanoTime() - start) * 1.0e-9;
+                    });
+                    break;
+                case "lue":
+                    HashSet<DataLUEObject> outliers4 = lue.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    outliers4.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+                    });
+                    break;
+                case "due":
+                    HashSet<DataLUEObject> outliers5 = due.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    outliers5.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+                    });
+                    break;
+                case "microCluster":
+                    ArrayList<Data> outliers6 = micro.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    outliers6.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+
+                    });
+                    break;
+                case "mesi":
+                    HashSet<Data> outliers7 = mesi.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    outliers7.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+                    });
+                    break;
+            }
+
+            double elapsedTimeInSec = (System.currentTimeMillis() - start) * 1.0 / 1000;
 
             totalTime += elapsedTimeInSec;
-            outliers.stream().forEach((outlier) -> {
-                idOutliers.add(outlier.arrivalTime);
-             });//
-//            outliers.stream().forEach((outlier) -> {
-//                //
-//                idOutliers.add(outlier.arrivalTime);
-//             });
 
             System.out.println("#window: " + numberWindows);
             System.out.println("Total #outliers: " + idOutliers.size());
             System.out.println("------------------------------------");
 
         }
-        // System.out.println("Peak memory: "+ Utils.peakUsedMemory);
 
-        System.out.println("Avarage Time: " + totalTime * 1.0 / numberWindows);
+        mesureThread.averageTime = totalTime * 1.0 / numberWindows;
+
+        mesureThread.writeResult();
+        mesureThread.stop();
+        mesureThread.interrupt();
         /**
          * Write result to file
          */
-        Writer writer = null;
-         String filename = Constants.outputStorm+Constants.W+"_"+Constants.slide+".txt";
+//        Writer writer = null;
+//         String filename = Constants.outputStorm+Constants.W+"_"+Constants.slide+".txt";
 
         // String filename = Constants.outputapStorm+Constants.W+"_"+Constants.slide+"__0.1"+".txt";
         // String filename = Constants.outputabstractC+Constants.W+"_"+Constants.slide+".txt";
@@ -124,24 +152,61 @@ public class MTTest {
         // String filename = Constants.outputMicro+Constants.W+"_"+Constants.slide+".txt";
 //        String filename = Constants.outputDUE + Constants.W + "_" + Constants.slide + ".txt";
         // String filename = Constants.outputMESI+Constants.W+"_"+Constants.slide+".txt";
-
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "utf-8"));
-            Integer[] outliers = idOutliers.toArray(new Integer[0]);
-            for (Integer i : outliers) {
-
-                writer.write(i + "\n");
-            }
-        } catch (IOException ex) {
-            // report
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {}
-        }
-
+//        try {
+//            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "utf-8"));
+//            Integer[] outliers = idOutliers.toArray(new Integer[0]);
+//            for (Integer i : outliers) {
+//
+//                writer.write(i + "\n");
+//            }
+//        } catch (IOException ex) {
+//            // report
+//        } finally {
+//            try {
+//                writer.close();
+//            } catch (Exception ex) {}
+//        }
         // get size of tree
-
     }
 
+    public static void readArguments(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+
+            //check if arg starts with --
+            String arg = args[i];
+            if (arg.indexOf("--") == 0) {
+                switch (arg) {
+                    case "--algorithm":
+                        algorithm = args[i + 1];
+                        break;
+                    case "--R":
+                        Constants.R = Double.valueOf(args[i + 1]);
+                        break;
+                    case "--W":
+                        Constants.W = Integer.valueOf(args[i + 1]);
+                        break;
+                    case "--k":
+                        Constants.k = Integer.valueOf(args[i + 1]);
+                        break;
+                    case "--datafile":
+                        Constants.dataFile = args[i + 1];
+                        break;
+                    case "--output":
+                        Constants.outputFile = args[i + 1];
+                        break;
+                    case "--numberWindow":
+                        Constants.numberWindow = Integer.valueOf(args[i + 1]);
+                        break;
+                    case "--slide":
+                        Constants.slide = Integer.valueOf(args[i + 1]);
+                        break;
+
+                }
+            }
+        }
+    }
+
+    public static void writeOutput(Double avergeTime, Double peakMemory) {
+
+    }
 }

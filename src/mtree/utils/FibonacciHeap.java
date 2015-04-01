@@ -51,50 +51,142 @@ public class FibonacciHeap<T extends Comparable<T>> {
 
     // luan add
     public void increaseKey(Node<T> node, T newKey) {
-        if (newKey.compareTo(node.key) < 0) throw new IllegalArgumentException(
-                "New key is smaller than old key.");
+        if (newKey.compareTo(node.key) < 0) {
+            throw new IllegalArgumentException(
+                    "New key is smaller than old key.");
+        }
 
         node.key = newKey;
-        
-       
+//        
+
         Node<T> parent = node.parent;
         Node<T> child = node.child;
 
-        if (parent != null && parent.child!=null) {
-            cut(node, parent);
-            node.parent = null;
-            cascadingCut(parent);
-        }
+        if(node.parent!=null)
+        node.parent.child = findMinNodeInList(node);
         if (child != null && newKey.compareTo(child.key) > 0) {
-            cutButNotRemoveFromList(child, node);
-            node.child = null;
-            child.parent = null;
-//            Node<T> temp = child.next;
-//            while(temp!=child )
-//            {
-//                temp.parent = null;
-//                temp = temp.next;
-//            }
-//            cascadingCut(node);
+            //?
+            switchParentVsChild(node, child);
+
+            
+           
+            if (minNode == node) {
+                minNode = child;
+                findMinNode();
+            }
         }
-        if(minNode == node) 
-            findMinNode();
+        else{
+             if (minNode == node) {
+               
+                findMinNode();
+            }
+        }
+
+//        
+    }
+
+    public void switchParentVsChild(Node<T> parent, Node<T> child) {
+        if (child == null) {
+            return;
+        }
+        if (parent == null) {
+            return;
+        }
+        child.parent = parent.parent;
+        Node<T> temp = child.next;
+        while (temp != child) {
+            temp.parent = child;
+            temp = temp.next;
+
+        }
+        if(child.child!=null){
+            child.child.parent= parent;
+            temp = child.child.next;
+            while(temp!=child.child){
+                temp.parent = parent;
+                temp = temp.next;
+            }
+        }
+        int t2 = child.degree;
+        child.degree = parent.degree;
+        parent.degree = t2;
+        child.isMarked = parent.isMarked;
+        parent.child = child.child;
+//        child.child = parent;
+
+        Node<T> nextOfChild = child.next;
+        Node<T> prevOfChild = child.prev;
+        if (parent.next != parent && child.next != child) {
+            child.next = parent.next;
+            parent.next.prev = child;
+            child.prev = parent.prev;
+            parent.prev.next = child;
+            parent.next = nextOfChild;
+            nextOfChild.prev = parent;
+            parent.prev = prevOfChild;
+            prevOfChild.next = parent;
+        } else if (parent.next != parent && nextOfChild == child) {
+            child.next = parent.next;
+            parent.next.prev = child;
+            child.prev = parent.prev;
+            parent.prev.next = child;
+            parent.next = parent;
+            parent.prev = parent;
+        } else if (parent.next == parent && nextOfChild != child) {
+            parent.next = nextOfChild;
+            nextOfChild.prev = parent;
+            parent.prev = prevOfChild;
+            prevOfChild.next = parent;
+            child.next = child;
+            child.prev = child;
+        }
+
+        parent.parent = child;
+        /**
+         * update min node in list of parent and child
+         *
+         */
+//        if (parent.parent != null) {
+//            parent.parent.child = findMinNodeInList(parent);
+//        }
+        if (child.parent != null) {
+            child.parent.child = findMinNodeInList(child);
+        }
         
-        
+        child.child = findMinNodeInList(parent);
+
+        if (parent.child != null && parent.key.compareTo(parent.child.key) > 0) {
+            switchParentVsChild(parent, parent.child);
+        }
 
     }
 
+    public Node<T> findMinNodeInList(Node<T> node) {
+        Node<T> result = node;
+        Node<T> temp = node.next;
+        while (temp != node) {
+
+            if (temp.key.compareTo(result.key) < 0) {
+                result = temp;
+            }
+            temp = temp.next;
+        }
+        return result;
+    }
+
     public void findMinNode() {
-        
+
         Node<T> node = minNode;
         Node<T> min = minNode;
         while (node.next != minNode) {
             node = node.next;
-            if (node.key.compareTo(min.key) < 0) min = node;
-            
+            if (node.key.compareTo(min.key) < 0) {
+                min = node;
+            }
+
         }
 
-      minNode = min;
+        minNode = min;
 
     }
 
@@ -115,26 +207,30 @@ public class FibonacciHeap<T extends Comparable<T>> {
     }
 
     private void cut(Node<T> node, Node<T> parent) {
+        
+        
+        parent.child = findMinNodeInList(node);
         removeNodeFromList(node);
         parent.degree--;
-        if(parent.degree < 0) parent.degree = 0;
+        if (parent.degree < 0) {
+            parent.degree = 0;
+        }
         mergeLists(minNode, node);
-        
-        
+
         node.isMarked = false;
     }
-    
+
     //luan add
     private void cutButNotRemoveFromList(Node<T> node, Node<T> parent) {
 //       / removeNodeFromList(node);
         parent.degree--;
-        if(parent.degree < 0) parent.degree = 0;
+        if (parent.degree < 0) {
+            parent.degree = 0;
+        }
         mergeLists(minNode, node);
-        
-        
+
         node.isMarked = false;
     }
-
 
     private void cascadingCut(Node<T> node) {
         Node<T> parent = node.parent;
@@ -174,6 +270,7 @@ public class FibonacciHeap<T extends Comparable<T>> {
                     child = child.next;
                 } while (child != extractedMin.child);
             }
+//            extractedMin.child = null;
 
             Node<T> nextInRootList = minNode.next == minNode ? null : minNode.next;
 
@@ -189,6 +286,8 @@ public class FibonacciHeap<T extends Comparable<T>> {
                 consolidate();
             }
         }
+        extractedMin.parent= null;
+        extractedMin.child = null;
         return extractedMin;
     }
 
@@ -287,10 +386,10 @@ public class FibonacciHeap<T extends Comparable<T>> {
 
         private T key;
         private int degree;
-        private Node<T> parent;
-        private Node<T> child;
-        private Node<T> prev;
-        private Node<T> next;
+        public Node<T> parent;
+        public Node<T> child;
+        public Node<T> prev;
+        public Node<T> next;
         private boolean isMarked;
         private boolean isMinimum;
 
