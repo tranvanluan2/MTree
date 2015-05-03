@@ -190,3 +190,388 @@ R=10.0;k=50;W=10000;slide=500
 Number Window = -1
 Peak Memory = 694.4647903442383
 CPU time = 0.017317460317460228
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 508.0723876953125
+CPU time = 0.011950617283950625
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1478.6657409667969
+CPU time = 6.8399629629629635
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 836.8117370605469
+CPU time = 1.74375
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 883.6314697265625
+CPU time = 2.02
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 475.86104583740234
+CPU time = 0.06975
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 1256.9159927368164
+CPU time = 19.660999999999998
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 1128.7521438598633
+CPU time = 0.711
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 1257.7950744628906
+CPU time = 20.52775
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 1058.2845306396484
+CPU time = 17.1505
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 1103.4077911376953
+CPU time = 0.57175
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = 3
+Peak Memory = 1047.0670547485352
+CPU time = 16.82425
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 881.9180679321289
+CPU time = 1.4147160493827158
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 485.6451187133789
+CPU time = 0.08779012345679016
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 488.06514739990234
+CPU time = 0.0883703703703704
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 617.341423034668
+CPU time = 0.14383950617283947
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 356.9039764404297
+CPU time = 0.0590246913580247
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 885.3522491455078
+CPU time = 0.10502469135802478
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1268.9054107666016
+CPU time = 2.9792962962962966
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 885.9462738037109
+CPU time = 0.10527160493827166
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 489.6119918823242
+CPU time = 0.006419753086419756
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 913.0195693969727
+CPU time = 0.35404938271604913
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 892.6562118530273
+CPU time = 1.3317160493827158
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 910.6952743530273
+CPU time = 0.3669629629629629
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 905.7304534912109
+CPU time = 0.35600000000000004
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 904.8309707641602
+CPU time = 0.27558024691358035
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 892.125846862793
+CPU time = 0.17874074074074073
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1328.6917266845703
+CPU time = 2.902419753086421
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1268.1097259521484
+CPU time = 2.859876543209876
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 891.906608581543
+CPU time = 0.16732098765432096
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 910.8920516967773
+CPU time = 0.36256790123456795
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 907.6542129516602
+CPU time = 0.31756790123456796
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1306.1176376342773
+CPU time = 2.9387654320987644
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\200dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1308.879051208496
+CPU time = 2.8565061728395045
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 907.5396423339844
+CPU time = 1.442358024691358
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 872.7736663818359
+CPU time = 0.6008888888888889
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 853.8006134033203
+CPU time = 0.6570617283950617
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=49.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 822.3958053588867
+CPU time = 0.8396172839506174
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=50.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 874.8899154663086
+CPU time = 0.6359012345679016
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=50.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 925.0602416992188
+CPU time = 1.5307777777777773
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=250.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 944.0322952270508
+CPU time = 0.05369135802469135
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\100dimension.txt
+R=50.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 874.6023101806641
+CPU time = 0.7289999999999999
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=250.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 989.4155578613281
+CPU time = 0.755938271604938
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=500.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1088.7734756469727
+CPU time = 0.04171604938271603
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=500.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1169.8953399658203
+CPU time = 0.849320987654321
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=500.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1104.026107788086
+CPU time = 0.04286419753086417
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=250.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1445.4045028686523
+CPU time = 7.24888888888889
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\1000dimension.txt
+R=250.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1177.5862045288086
+CPU time = 0.8441604938271604
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=100.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 966.6313934326172
+CPU time = 3.3707160493827155
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1296.0279998779297
+CPU time = 4.311827160493827
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 988.5726165771484
+CPU time = 0.8211851851851849
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 988.6832122802734
+CPU time = 0.80179012345679
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 994.7736053466797
+CPU time = 0.6918148148148147
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=200.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 976.4646453857422
+CPU time = 1.2336296296296296
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=150.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1311.7080612182617
+CPU time = 4.5260740740740735
+----------------------------------------
+Algorithm=mesiWithHash
+Data File = C:\\Users\\Luan\\MTree\\500dimension.txt
+R=150.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 975.7673645019531
+CPU time = 1.177209876543209

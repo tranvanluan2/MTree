@@ -34,6 +34,11 @@ public class MesureMemoryThread extends Thread {
 
     public  double averageTime = 0;
 
+    public static double timeForIndexing = 0;
+    public static double timeForDetecting = 0; 
+    
+    public static double timeForReporting = 0;
+    public static double timeForQuerying = 0; 
     public void computeMemory() {
 
 //        List<MemoryPoolMXBean> pools= ManagementFactory.getMemoryPoolMXBeans();
@@ -43,7 +48,7 @@ public class MesureMemoryThread extends Thread {
 //                if(maxMemory < p.getUsage().getUsed())
 //                    maxMemory = p.getUsage().getUsed();
 //        }
-        
+        Runtime.getRuntime().gc();
         long used = Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory();
         if(maxMemory < used)
             maxMemory = used;
@@ -59,7 +64,7 @@ public class MesureMemoryThread extends Thread {
         while (true) {
             computeMemory();
             try {
-                Thread.sleep(50);
+                Thread.sleep(Constants.samplingPeriod);
             } catch (InterruptedException ex) {
                 Logger.getLogger(MesureMemoryThread.class.getName()).log(Level.SEVERE, null, ex);
             }

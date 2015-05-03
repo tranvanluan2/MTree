@@ -4,10 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import mtree.ComposedSplitFunction;
+import mtree.DistanceFunction;
+import mtree.DistanceFunctions;
+import mtree.MTree;
+import mtree.PartitionFunctions;
+import mtree.PromotionFunction;
 
 import mtree.tests.Data;
 import mtree.utils.Constants;
-
+import mtree.utils.Pair;
+import mtree.utils.Utils;
+import mtree.tests.MeasureMemory;
+import mtree.tests.MesureMemoryThread;
 public class MESI {
 
     /**
@@ -15,17 +25,26 @@ public class MESI {
      */
     public static HashSet<Data> outlierList = new HashSet<>();
     public static Window window = new Window();
-
+    
+    public static int count = 0;
+    public static int totalTrigger = 0;
+    
+    public static double timeForNewSlide = 0;
+    public static double timeForExpireSlide = 0;
+    
     public HashSet<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
 
+        long startCPUTime = Utils.getCPUTime();
         if (data.size() == Constants.W) {
             // split into slides
-            int numSlide = Constants.W / Constants.slide;
+            int numSlide = (int) Math.ceil(Constants.W * 1.0 / Constants.slide);
             for (int i = 0; i < numSlide; i++) {
 
                 ArrayList<Data> d = new ArrayList<>();
                 for (int j = 0; j < Constants.slide; j++) {
-                    d.add(data.get(i * Constants.slide + j));
+                    if (i * Constants.slide + j < data.size()) {
+                        d.add(data.get(i * Constants.slide + j));
+                    }
                 }
                 Slide s = new Slide(d, currentTime);
                 window.addNewSlide(s);
@@ -38,8 +57,13 @@ public class MESI {
             window.addNewSlide(s);
 
         }
+        long currentCPUTime = Utils.getCPUTime();
+        MesureMemoryThread.timeForIndexing += currentCPUTime - startCPUTime;
+        
+        
         Thresh_LEAP(window);
 
+        
         for (int i = window.startSlide; i < window.slides.size(); i++) {
             if (i >= 0) {
                 for (MESIObject o : window.slides.get(i).points) {
@@ -49,16 +73,18 @@ public class MESI {
                 }
             }
         }
+        
+        
 //         print_window();
 //         print_outlier();
-
+        
         return outlierList;
 
     }
 
     public void Thresh_LEAP(Window window) {
-
-        if (window.slides.size() <= Constants.W / Constants.slide) {
+        
+        if (window.slides.size() <= Math.ceil(Constants.W * 1.0 / Constants.slide)) {
             window.slides.stream().forEach((s) -> {
                 s.points.stream().forEach((p) -> {
                     LEAP(p, window);
@@ -69,10 +95,13 @@ public class MESI {
                 LEAP(p, window);
             });
         }
-
+        
         Slide expiredSlide = window.getExpiredSlide();
-
+        
         if (expiredSlide != null) {
+            
+            count ++;
+            totalTrigger +=expiredSlide.triggered.size();
             /**
              * clear expired slides
              */
@@ -91,11 +120,15 @@ public class MESI {
                     LEAP(p, p.getSkippedPoints(window, expiredSlide));
                 });
             }
+            
+            long startTime = Utils.getCPUTime();
+            
             expiredSlide.points.clear();
-//            window.slides.subList(0, expiredSlide.id).clear();
+            
+            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
         }
+        
 
-//        Utils.computeUsedMemory();
     }
 
     public boolean LEAP(MESIObject p, Window window) {
@@ -111,36 +144,29 @@ public class MESI {
         for (int i = currentSlideIndex; i <= window.getNewestSlide().id; i++) {
 
             Slide s = window.slides.get(i);
-            HashSet<MESIObject> checkedPoints = new HashSet<>();
-            for (MESIObject o : s.points) {
-                if (o.arrivalTime != p.arrivalTime) {
-                    checkedPoints.add(o);
-//                    p.lastLEAPSlide = o.getCurrentSlideIndex();
+            
+            long startTime = Utils.getCPUTime();
+
+            ArrayList<Data> neighbors = s.findNeighbors(p, Constants.k + 1);
+            
+            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
+            MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime;
+            
+            for (Data d : neighbors) {
+                if (d.arrivalTime != p.arrivalTime) {
                     p.lastLEAPSlide = i;
-                    if (true == p.isNeighborhood(o)) {
-                        p.updateSuccEvidence();
-                        if (p.isMESIAquired()) {
-                            p.isOutlier = false;
+                    p.updateSuccEvidence();
+                    if (p.isMESIAquired()) {
+                        p.isOutlier = false;
 
-                            // check neighborhood of p with remaining points in the o's slide
-                            for (MESIObject o2 : s.points) {
-
-                                if (o2.arrivalTime > (p.lastLEAPSlide + 1) * Constants.slide) {
-                                    break;
-                                }
-                                if (!checkedPoints.contains(o2) && o2.arrivalTime != p.arrivalTime && o2.getCurrentSlideIndex() == p.lastLEAPSlide && true == p.isNeighborhood(o2)) {
-                                    p.updateSuccEvidence();
-                                }
-                            }
-                            if (p.numSucEvidence >= Constants.k) {
-                                p.isSafe = true;
-                            }
-                            return isOutlier;
+                        if (p.numSucEvidence >= Constants.k) {
+                            p.isSafe = true;
                         }
+                        return isOutlier;
                     }
-
                 }
             }
+
         }
 
         List<Slide> precSlides = p.getPrecSlides(window);
@@ -150,14 +176,27 @@ public class MESI {
                 // p.preEvidence.put(slide, 0);
 
                 if (slide != null) {
-                    for (MESIObject o : slide.points) {
-                        if (true == p.isNeighborhood(o)) {
+
+//                    for (MESIObject o : slide.points) {
+//                        if (true == p.isNeighborhood(o)) {
+//                            p.updatePrecEvidence(slide);
+//                            if (true == p.isMESIAquired()) {
+//                                p.isOutlier = false;
+//                                p.isSafe = false;
+//                                slide.updateTriggeredList(p);
+//
+//                                return isOutlier;
+//                            }
+//                        }
+//                    }
+                    ArrayList<Data> neighbors = slide.findNeighbors(p, Constants.k + 1);
+                    for (Data d : neighbors) {
+                        if (d.arrivalTime != p.arrivalTime) {
                             p.updatePrecEvidence(slide);
-                            if (true == p.isMESIAquired()) {
+                            if (p.isMESIAquired() == true) {
                                 p.isOutlier = false;
                                 p.isSafe = false;
                                 slide.updateTriggeredList(p);
-
                                 return isOutlier;
                             }
                         }
@@ -253,11 +292,34 @@ class Slide {
 
     public Window window;
     public HashSet<MESIObject> triggered = new HashSet<>();
+    public MESIMTreeClass mtree = new MESIMTreeClass();
 
     public Slide(ArrayList<Data> data, int currentTime) {
-        data.stream().forEach((d) -> {
-            points.add(new MESIObject(d, currentTime));
-        });
+        for(Data d: data){
+            MESIObject d2 = new MESIObject(d, currentTime);
+            points.add(d2);
+//            MTreeClass.Query query = mtree.getNearest(d);
+//            for (MTreeClass.ResultItem ri : query) {
+//                if(ri.distance == 0) 
+//                {
+//                    d2.values[0]+=(new Random()).nextDouble()/1000000;
+//                    break;
+//                }
+//            }
+            mtree.add(d2);
+        }
+    }
+
+    public ArrayList<Data> findNeighbors(Data d, int k) {
+        ArrayList<Data> result = new ArrayList<>();
+
+        MTreeClass.Query query = mtree.getNearest(d, Constants.R, k);
+
+        for (MTreeClass.ResultItem ri : query) {
+            result.add(ri.data);
+        }
+
+        return result;
     }
 
     public void updateSkippedSlide() {
@@ -275,6 +337,36 @@ class Slide {
     }
 
 }
+
+class MESIMTreeClass extends MTree<Data> {
+
+    private static final PromotionFunction<Data> nonRandomPromotion = new PromotionFunction<Data>() {
+        @Override
+        public Pair<Data> process(Set<Data> dataSet, DistanceFunction<? super Data> distanceFunction) {
+            return Utils.minMax(dataSet);
+        }
+    };
+
+    MESIMTreeClass() {
+        super(2, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<Data>(nonRandomPromotion,
+                new PartitionFunctions.BalancedPartition<Data>()));
+    }
+
+    public void add(MESIObject data) {
+        super.add(data);
+        _check();
+    }
+
+    public boolean remove(MESIObject data) {
+        boolean result = super.remove(data);
+        _check();
+        return result;
+    }
+
+    DistanceFunction<? super Data> getDistanceFunction() {
+        return distanceFunction;
+    }
+};
 
 class MESIObject extends Data {
 
@@ -314,7 +406,7 @@ class MESIObject extends Data {
 
     public void expireEvidence(Slide s, Window window) {
 //        this.preEvidence.remove(s);
-        if(preEvidence.get(s)!=null) {
+        if (preEvidence.get(s) != null) {
             this.numPreEvidence -= preEvidence.get(s);
         } else {
         }
@@ -363,10 +455,10 @@ class MESIObject extends Data {
     public void updatePrecEvidence(Slide s) {
         if (this.preEvidence.get(s) == null) {
             this.preEvidence.put(s, 1);
-            numPreEvidence ++;
+            numPreEvidence++;
         } else {
             this.preEvidence.put(s, this.preEvidence.get(s) + 1);
-            numPreEvidence ++;
+            numPreEvidence++;
         }
     }
 
@@ -379,7 +471,7 @@ class MESIObject extends Data {
 
             numPreEvidence = numPreceding;
         }
-        
+
         return numSucEvidence + numPreEvidence >= Constants.k;
 
     }

@@ -20,7 +20,6 @@ import mtree.utils.Utils;
 public class ExactStorm {
 
     public static MTreeClass mtree = new MTreeClass();
-
     // store list id in increasing time arrival order
     public static ArrayList<DataStormObject> dataList = new ArrayList<>();
 
@@ -110,9 +109,49 @@ public class ExactStorm {
         // }
         // System.out.println();
 //        Utils.computeUsedMemory();
+        
+        //count number of preceding neighbors 
+//        double numPre = 0;
+//        for(DataStormObject d: dataList){
+//            int pre = 0;
+//            pre = d.nn_before.stream().filter((nn_before) -> (nn_before.arrivalTime > currentTime - W)).map((_item) -> 1).reduce(pre, Integer::sum);
+//            numPre += pre;
+//        }
+//        numPre = numPre/dataList.size();
         return outliers;
+    
+    }
+    
+    public void processFirstWindow(ArrayList<Data> data, int currentTime, int W, int slide){
+       for(Data d: data){
+           DataStormObject ob = new DataStormObject(d);
+           mtree.add(ob);
+           dataList.add(ob);
+       }
+       for(DataStormObject d: dataList){
+            MTreeClass.Query query = mtree.getNearestByRange(d, Constants.R);
+
+            ArrayList<DataStormObject> queryResult = new ArrayList<>();
+            for (MTreeClass.ResultItem ri : query) {
+                queryResult.add((DataStormObject) ri.data);
+                if (ri.distance == 0) d.values[0] += (new Random()).nextDouble() / 1000000;
+            }
+
+            Collections.sort(queryResult, new DataStormComparator());
+            for(DataStormObject dob: queryResult){ 
+            
+                if(dob.arrivalTime >= d.arrivalTime) d.count_after ++;
+                else if(dob.arrivalTime >= currentTime -Constants.W && dob.arrivalTime < d.arrivalTime){
+                    if(d.nn_before.size() < Constants.k) 
+                        d.nn_before.add(dob);
+                }
+            }
+            
+       }
     }
 }
+
+
 
 class MTreeClass extends MTree<Data> {
 

@@ -14,14 +14,15 @@ public class Data implements EuclideanCoordinate, Comparable<Data> {
 	
 	
 	
+        
 	public Data(double... values) {
 		this.values = values;
 		
-		int hashCode = 1;
+		int hashCode2 = 1;
 		for(double value : values) {
-			hashCode = 31*hashCode + (int)value + (new Random()).nextInt(100000);
+			hashCode2 = 31*hashCode2 + (int)value + (new Random()).nextInt(100000);
 		}
-		this.hashCode = hashCode;
+		this.hashCode = hashCode2;
 	}
 	
 	@Override

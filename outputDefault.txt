@@ -1,0 +1,420 @@
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1117.6011657714844
+CPU time = 0.08122115384615403
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 983.7120132446289
+CPU time = 0.6176666666666667
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 1005.646110534668
+CPU time = 7.2381666666666655
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 965.7037582397461
+CPU time = 0.29533333333333334
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 931.4549942016602
+CPU time = 0.1596666666666667
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 972.4420928955078
+CPU time = 0.6796666666666665
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 956.6658172607422
+CPU time = 0.6453333333333334
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 999.757682800293
+CPU time = 0.4685000000000001
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 5
+Peak Memory = 985.6638641357422
+CPU time = 0.29350000000000004
+----------------------------------------
+Algorithm=microCluster
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=7000
+Number Window = 5
+Peak Memory = 1004.1850738525391
+CPU time = 0.6486666666666667
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=5000
+Number Window = 5
+Peak Memory = 1032.7684860229492
+CPU time = 2.6901666666666664
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 1037.940185546875
+CPU time = 0.031529720279719904
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\tao.txt
+R=3.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 961.073844909668
+CPU time = 0.1347588339222605
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\tao.txt
+R=3.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 900.7462692260742
+CPU time = 0.0295609540636042
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 1000.5327453613281
+CPU time = 0.17236633663366338
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1045.816650390625
+CPU time = 1.1454554455445543
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=500
+Number Window = 100
+Peak Memory = 1046.2661361694336
+CPU time = 2.9961485148514853
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 1024.0161209106445
+CPU time = 0.16951485148514853
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1054.5417785644531
+CPU time = 1.0714356435643568
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 988.9836349487305
+CPU time = 0.16382178217821786
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 718.0951309204102
+CPU time = 0.16291089108910892
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 667.5180053710938
+CPU time = 1.056237623762376
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 724.2134323120117
+CPU time = 1.0613267326732672
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 994.8717193603516
+CPU time = 0.9849900990099006
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1040.0095291137695
+CPU time = 1.2465940594059406
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 995.649528503418
+CPU time = 0.19254455445544547
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 992.3891143798828
+CPU time = 0.16836633663366343
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1020.848030090332
+CPU time = 1.410356435643564
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 665.4644622802734
+CPU time = 1.0351683168316828
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 662.7962112426758
+CPU time = 0.17274257425742576
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 1026.0160064697266
+CPU time = 0.17410891089108907
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1065.7143020629883
+CPU time = 1.1583762376237619
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 1014.9865417480469
+CPU time = 0.17710891089108904
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 990.2517700195312
+CPU time = 1.0849504950495048
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1043.332633972168
+CPU time = 1.3398415841584161
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 993.2931671142578
+CPU time = 0.1749405940594059
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 995.2538909912109
+CPU time = 0.1693960396039604
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1040.5374069213867
+CPU time = 1.3694851485148514
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=5000;slide=500
+Number Window = 100
+Peak Memory = 1066.9514465332031
+CPU time = 1.2018118811881187
+----------------------------------------
+Algorithm=exactStorm
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 100
+Peak Memory = 1011.7986831665039
+CPU time = 0.17010891089108915
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=100
+Number Window = 100
+Peak Memory = 1013.9797134399414
+CPU time = 0.12070297029702973
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=1000
+Number Window = 100
+Peak Memory = 994.82275390625
+CPU time = 0.11535643564356433
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=2000
+Number Window = 100
+Peak Memory = 1011.4369659423828
+CPU time = 0.3358712871287129
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=2000
+Number Window = 100
+Peak Memory = 1022.8233108520508
+CPU time = 0.33200990099009897
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=1000
+Number Window = 100
+Peak Memory = 994.5353469848633
+CPU time = 0.11316831683168314
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=1000
+Number Window = 100
+Peak Memory = 279.58605194091797
+CPU time = 0.38510891089108906
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=10000;slide=5000
+Number Window = 100
+Peak Memory = 279.9591751098633
+CPU time = 3.8005841584158415
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 30
+Peak Memory = 272.4064712524414
+CPU time = 0.8226451612903227
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 30
+Peak Memory = 274.7358703613281
+CPU time = 0.14867741935483872
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 30
+Peak Memory = 273.2450942993164
+CPU time = 0.1416451612903226
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=1500.0;k=50;W=1000;slide=500
+Number Window = 30
+Peak Memory = 274.7955017089844
+CPU time = 0.13761290322580647
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\stt.txt
+R=0.1;k=50;W=50000;slide=5000
+Number Window = 13
+Peak Memory = 141.6344757080078
+CPU time = 170.3502857142857
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\stt.txt
+R=0.1;k=50;W=50000;slide=5000
+Number Window = 12
+Peak Memory = 0.7837982177734375
+CPU time = 53.439384615384604
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\stt.txt
+R=0.1;k=50;W=10000;slide=5000
+Number Window = 20
+Peak Memory = 0.7837982177734375
+CPU time = 19.860428571428567
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\tao.txt
+R=3.0;k=50;W=1000;slide=500
+Number Window = -1
+Peak Memory = 0.7833938598632812
+CPU time = 0.02918956521739128
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\tao.txt
+R=3.0;k=50;W=5000;slide=500
+Number Window = -1
+Peak Memory = 0.7835540771484375
+CPU time = 0.027543782837127644
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\stt.txt
+R=0.1;k=50;W=10000;slide=5000
+Number Window = -1
+Peak Memory = 711.4059982299805
+CPU time = 352.8055071770334
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\stt.txt
+R=0.1;k=50;W=50000;slide=5000
+Number Window = -1
+Peak Memory = 849.4449844360352
+CPU time = 789.3853034825869
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=525.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 849.2848129272461
+CPU time = 1.6381809440559427
+----------------------------------------
+Algorithm=mesi
+Data File = C:\\Users\\Luan\\MTree\\covtype.data
+R=525.0;k=50;W=10000;slide=500
+Number Window = -1
+Peak Memory = 849.3400726318359
+CPU time = 0.34702797202797203

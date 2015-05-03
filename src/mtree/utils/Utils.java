@@ -1,5 +1,7 @@
 package mtree.utils;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -99,5 +101,11 @@ public final class Utils {
 //        System.out.println("Peak memory: " + peakUsedMemory);
 
 	}
+        
+        
+        public static long getCPUTime(){
+            ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+            return bean.isCurrentThreadCpuTimeSupported()? bean.getCurrentThreadCpuTime(): 0L;
+        }
 	
 }

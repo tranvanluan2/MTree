@@ -14,13 +14,13 @@ public class CompareResult {
     
     public static void main(String[] args) throws IOException{
         
-        double[] result = compare("C:\\Users\\Luan\\MTree\\abstractC50_20.txt", "C:\\Users\\Luan\\MTree\\trueErrorDetection.txt");
+        double[] result = compare("C:\\Users\\Luan\\workspace\\MTree\\mesiWithHash500dimension.txt", "C:\\Users\\Luan\\workspace\\MTree\\micro500dimension.txt");
         System.out.println("Precison: "+result[0]);
         System.out.println("Recall: "+result[1]);
         
-        result = compare("C:\\Users\\Luan\\MTree\\abstractC50_20.txt", "C:\\Users\\Luan\\MTree\\trueErrorDetection_1000.txt");
-        System.out.println("Precison: "+result[0]);
-        System.out.println("Recall: "+result[1]);
+//        result = compare("C:\\Users\\Luan\\MTree\\abstractC50_20.txt", "C:\\Users\\Luan\\MTree\\trueErrorDetection_1000.txt");
+//        System.out.println("Precison: "+result[0]);
+//        System.out.println("Recall: "+result[1]);
     }
     
     public static double[] compare(String filename1, String filename2) throws IOException{

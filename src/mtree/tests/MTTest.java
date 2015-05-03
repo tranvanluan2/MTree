@@ -1,10 +1,10 @@
 package mtree.tests;
 
+import be.tarsos.lsh.Vector;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -16,7 +16,9 @@ import outlierdetection.Lazy_Update_Event;
 import outlierdetection.MESI;
 import outlierdetection.MicroCluster;
 import mtree.utils.Constants;
+import mtree.utils.Utils;
 import outlierdetection.DataLUEObject;
+import outlierdetection.MESIWithHash;
 
 public class MTTest {
 
@@ -49,6 +51,7 @@ public class MTTest {
         Direct_Update_Event due = new Direct_Update_Event();
         MicroCluster micro = new MicroCluster();
         MESI mesi = new MESI();
+        MESIWithHash mesiWithHash = new MESIWithHash();
         int numberWindows = 0;
         double totalTime = 0;
         while (!stop && s.hasNext()) {
@@ -67,7 +70,7 @@ public class MTTest {
                 currentTime = currentTime + Constants.W;
             }
 
-            long start = System.currentTimeMillis(); // requires java 1.5
+            long start = Utils.getCPUTime(); // requires java 1.5
 
             /**
              * do algorithm
@@ -75,6 +78,9 @@ public class MTTest {
             switch (algorithm) {
                 case "exactStorm":
                     ArrayList<Data> outliers = estorm.detectOutlier(incomingData, currentTime, Constants.W, Constants.slide);
+                    double elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
                     });
@@ -82,6 +88,9 @@ public class MTTest {
                 case "approximateStorm":
                     ArrayList<Data> outliers2 = apStorm.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers2.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
                     });
@@ -89,6 +98,9 @@ public class MTTest {
                 case "abstractC":
                     ArrayList<Data> outliers3 = abstractC.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers3.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
 
@@ -97,6 +109,9 @@ public class MTTest {
                 case "lue":
                     HashSet<DataLUEObject> outliers4 = lue.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers4.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
                     });
@@ -104,6 +119,9 @@ public class MTTest {
                 case "due":
                     HashSet<DataLUEObject> outliers5 = due.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers5.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
                     });
@@ -111,6 +129,9 @@ public class MTTest {
                 case "microCluster":
                     ArrayList<Data> outliers6 = micro.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers6.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
 
@@ -119,18 +140,34 @@ public class MTTest {
                 case "mesi":
                     HashSet<Data> outliers7 = mesi.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
                     outliers7.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
                     });
                     break;
+                case "mesiWithHash":
+                    HashSet<Vector> outliers8 = mesiWithHash.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
+                    outliers8.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+                    });
+                    break;
+
             }
 
-            double elapsedTimeInSec = (System.currentTimeMillis() - start) * 1.0 / 1000;
-
-            totalTime += elapsedTimeInSec;
+            
 
             System.out.println("#window: " + numberWindows);
             System.out.println("Total #outliers: " + idOutliers.size());
+            System.out.println("Average Time: "+ totalTime*1.0/numberWindows);
+            System.out.println("Peak memory: "+ MesureMemoryThread.maxMemory* 1.0 / 1024 / 1024);
+            System.out.println("Time for index structure: "+ MesureMemoryThread.timeForIndexing*1.0/1000000000/numberWindows);
+            System.out.println("Time for querying: "+MesureMemoryThread.timeForQuerying*1.0/1000000000/numberWindows);
             System.out.println("------------------------------------");
 
         }
@@ -140,33 +177,15 @@ public class MTTest {
         mesureThread.writeResult();
         mesureThread.stop();
         mesureThread.interrupt();
+        
+        
         /**
          * Write result to file
          */
-//        Writer writer = null;
-//         String filename = Constants.outputStorm+Constants.W+"_"+Constants.slide+".txt";
-
-        // String filename = Constants.outputapStorm+Constants.W+"_"+Constants.slide+"__0.1"+".txt";
-        // String filename = Constants.outputabstractC+Constants.W+"_"+Constants.slide+".txt";
-//         String filename = Constants.outputLUE+Constants.W+"_"+Constants.slide+".txt";
-        // String filename = Constants.outputMicro+Constants.W+"_"+Constants.slide+".txt";
-//        String filename = Constants.outputDUE + Constants.W + "_" + Constants.slide + ".txt";
-        // String filename = Constants.outputMESI+Constants.W+"_"+Constants.slide+".txt";
-//        try {
-//            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "utf-8"));
-//            Integer[] outliers = idOutliers.toArray(new Integer[0]);
-//            for (Integer i : outliers) {
-//
-//                writer.write(i + "\n");
-//            }
-//        } catch (IOException ex) {
-//            // report
-//        } finally {
-//            try {
-//                writer.close();
-//            } catch (Exception ex) {}
-//        }
-        // get size of tree
+        if(!"".equals(Constants.resultFile)){
+            writeResult();
+        }
+//      
     }
 
     public static void readArguments(String[] args) {
@@ -200,13 +219,26 @@ public class MTTest {
                     case "--slide":
                         Constants.slide = Integer.valueOf(args[i + 1]);
                         break;
+                    case "--resultFile":
+                        Constants.resultFile = args[i + 1];
+                        break;
+                    case "--samplingTime":
+                        Constants.samplingPeriod = Integer.valueOf(args[i + 1]);
+                        break;
 
                 }
             }
         }
     }
 
-    public static void writeOutput(Double avergeTime, Double peakMemory) {
+    public static void writeResult() {
+
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(Constants.resultFile, true)))) {
+            for(Integer time: idOutliers){
+                out.println(time);
+            }
+        } catch (IOException e) {
+        }
 
     }
 }

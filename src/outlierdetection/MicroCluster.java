@@ -97,10 +97,7 @@ public class MicroCluster {
             dataList.add(d);
         });
 
-        // print_cluster();
-        // print_outlier();
-        // print_PD();
-        Utils.computeUsedMemory();
+
         outlierList.stream().forEach((o) -> {
             result.add(o);
         });

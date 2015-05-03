@@ -7,7 +7,8 @@ public class Constants {
     public static int W = 10000;
     public static int numberWindow = -1;
     public static int slide = 500;
-    
+    public static int dimensions = 1000;
+    public static int samplingPeriod = 100;
     public static String forestCoverFileName = "C:\\Users\\Luan\\MTree\\covtype.data";
     public static String taoFileName = "C:\\Users\\Luan\\MTree\\tao.txt";
     public static String outputStorm = "C:\\Users\\Luan\\MTree\\storm";
@@ -39,6 +40,7 @@ public class Constants {
     public static String STT = "C:\\Users\\Luan\\MTree\\stt.txt";
     public static String dataFile= "";
     public static String outputFile= "outputDefault.txt";
+    public static String resultFile="";
     
     
     

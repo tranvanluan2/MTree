@@ -144,7 +144,7 @@ public class Stream {
                     double[] d  = new double[atts.length];
                     for(int i = 0; i < d.length; i++){
                         
-                        d[i] = Double.valueOf(atts[i]);
+                        d[i] = Double.valueOf(atts[i])+(new Random()).nextDouble()/10000000;
                     }
                     Data data = new Data(d);
                     data.arrivalTime = time;
