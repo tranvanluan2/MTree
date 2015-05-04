@@ -39,6 +39,9 @@ public class MesureMemoryThread extends Thread {
     
     public static double timeForReporting = 0;
     public static double timeForQuerying = 0; 
+    
+    public static double timeForNewSlide = 0;
+    public static double timeForExpireSlide = 0;
     public void computeMemory() {
 
 //        List<MemoryPoolMXBean> pools= ManagementFactory.getMemoryPoolMXBeans();
@@ -84,6 +87,10 @@ public class MesureMemoryThread extends Thread {
             out.println("Number Window = " + Constants.numberWindow);
             out.println("Peak Memory = " + maxMemory * 1.0 / 1024 / 1024);
             out.println("CPU time = " + averageTime);
+            out.println("Time for index structure: "+ MesureMemoryThread.timeForIndexing*1.0/1000000000/Constants.numberWindow);
+            out.println("Time for querying: "+ MesureMemoryThread.timeForQuerying*1.0/1000000000/Constants.numberWindow);
+            out.println("Time for new slide: "+ MesureMemoryThread.timeForNewSlide*1.0/1000000000/Constants.numberWindow);
+            out.println("Time for expired slide: "+ MesureMemoryThread.timeForExpireSlide*1.0/1000000000/Constants.numberWindow);
 
         } catch (IOException e) {
         }

@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Random;
 
 import mtree.tests.Data;
+import mtree.tests.MesureMemoryThread;
 import mtree.utils.Constants;
+import mtree.utils.Utils;
 
 public class AbstractC {
 
@@ -23,7 +25,7 @@ public class AbstractC {
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
         ArrayList<Data> outliers = new ArrayList<>();
 
-        long start = System.currentTimeMillis();
+        long startTime = Utils.getCPUTime();
         /**
          * remove expired data from dataList and mtree
          */
@@ -34,7 +36,9 @@ public class AbstractC {
                 // mark here for removing data from datalist later
                 index = i;
                 // remove from mtree
+                long start4 = Utils.getCPUTime();
                 mtree.remove(d);
+                MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - start4;
                 // System.out.println(t);
 
             } else {
@@ -45,12 +49,18 @@ public class AbstractC {
 
             dataList.remove(i);
         }
+        
+        MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
+        
+        startTime = Utils.getCPUTime();
 
         data.stream().map((d) -> new DataAbtractCObject(d, currentTime)).map((DataAbtractCObject dac) -> {
             /**
              * do range query for ob
              */
+            long startTime2 = Utils.getCPUTime();
             MTreeClass.Query query = mtree.getNearestByRange(dac, Constants.R);
+            MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime2;
             for (MTreeClass.ResultItem ri : query) {
                 if (ri.distance == 0) {
                     dac.values[0] += (new Random()).nextDouble() / 1000000;
@@ -76,7 +86,9 @@ public class AbstractC {
             /**
              * store object into mtree
              */
+            long startTime3 = Utils.getCPUTime();
             mtree.add(dac);
+            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime3;
             return dac;
         }).forEach((dac) -> {
             dataList.add(dac);
@@ -101,19 +113,8 @@ public class AbstractC {
                 d.lt_cnt.remove(0);
             }
         });
-//        start = System.currentTimeMillis();
-// System.out.println("Outliers: ");
-        // for (Data o : outliers) {
-        // System.out.print(o.values[0] + " ; ");
-        // }
-        // System.out.println();
-        // System.out.println("Data list: ");
-        // for (Data o : dataList) {
-        // System.out.print(o.values[0] + " ; ");
-        // }
-        // System.out.println();
-
-//        Utils.computeUsedMemory();
+        
+        MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
         return outliers;
     }
 

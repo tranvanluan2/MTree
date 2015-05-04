@@ -6,8 +6,10 @@ import java.util.HashSet;
 import java.util.Random;
 
 import mtree.tests.Data;
+import mtree.tests.MesureMemoryThread;
 import mtree.utils.Constants;
 import mtree.utils.FibonacciHeap.Node;
+import mtree.utils.Utils;
 
 public class Direct_Update_Event extends Lazy_Update_Event {
 
@@ -17,7 +19,7 @@ public class Direct_Update_Event extends Lazy_Update_Event {
         /**
          * remove expired data from dataList and mtree
          */
-        long startTime = System.currentTimeMillis();
+        long startTime = Utils.getCPUTime();
         int index = -1;
         for (int i = 0; i < dataList.size(); i++) {
             DataLUEObject d = dataList.get(i);
@@ -25,7 +27,9 @@ public class Direct_Update_Event extends Lazy_Update_Event {
                 // mark here for removing data from datalist later
                 index = i;
                 // remove from mtree
+                long start3 = Utils.getCPUTime();
                 mtree.remove(d);
+                MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - start3;
 
             } else {
                 break;
@@ -44,6 +48,8 @@ public class Direct_Update_Event extends Lazy_Update_Event {
             dataList.remove(i);
         }
 
+        MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
+        startTime = Utils.getCPUTime();
         // Runtime.getRuntime().gc();
         data.stream().map((d) -> new DataLUEObject(d, currentTime)).map((p) -> {
             /**
@@ -103,11 +109,15 @@ public class Direct_Update_Event extends Lazy_Update_Event {
             }
             return p;
         }).map((p) -> {
+            long startTime2 = Utils.getCPUTime();
             mtree.add(p);
+            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime2;
             return p;
         }).forEach((p) -> {
             dataList.add(p);
         });
+        
+        MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
 
         return outlierList;
     }

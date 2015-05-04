@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 import java.util.Random;
 
 import mtree.tests.Data;
+import mtree.tests.MesureMemoryThread;
 import mtree.utils.Constants;
 import mtree.utils.Utils;
 
@@ -32,11 +33,13 @@ public class MicroCluster {
 
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
 
+        
         ArrayList<Data> result = new ArrayList<Data>();
         /**
          * purge expired objects
          */
 
+        long startTime = Utils.getCPUTime();
         ArrayList<MCObject> expiredData = new ArrayList<MCObject>();
 
         int index = -1;
@@ -85,11 +88,14 @@ public class MicroCluster {
 
             dataList.remove(i);
         }
-
+        
+        MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
+        
         /*
          * process new incoming data
          */
         // do range query with mtree of cluster centers
+        startTime = Utils.getCPUTime();
         data.stream().map((d2) -> new MCObject(d2)).map((d) -> {
             process_data(d, currentTime, false);
             return d;
@@ -101,6 +107,8 @@ public class MicroCluster {
         outlierList.stream().forEach((o) -> {
             result.add(o);
         });
+        MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
+        
         return result;
 
     }
@@ -141,7 +149,9 @@ public class MicroCluster {
     }
 
     private void process_shrink_cluster(ArrayList<MCObject> inCluster_objects, int currentTime) {
+        long startTime = Utils.getCPUTime();
         mtree.remove(inCluster_objects.get(0).cluster);
+        MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
         ArrayList<MCObject> list_associates = associate_objects.get(inCluster_objects.get(0).cluster);
         if (list_associates != null) list_associates.stream().forEach((o) -> {
             o.Rmc.remove(inCluster_objects.get(0).cluster);
@@ -215,8 +225,10 @@ public class MicroCluster {
 
     public void process_data(MCObject d, int currentTime, boolean fromCluster) {
 
+        
+        long startTime = Utils.getCPUTime();
         MTreeClass.Query query = mtree.getNearestByRange(d, Constants.R * 3 / 2);
-
+        MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime;
         // ed
 
         double min_distance = Double.MAX_VALUE;
@@ -334,7 +346,9 @@ public class MicroCluster {
                     outlierList.remove(o);
                 }
                 micro_clusters.put(d, neighbor_in_R2);
+                long startTime2 = Utils.getCPUTime();
                 mtree.add(d);
+                MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime2;
                 // update Rmc for points in PD
                 neighbor_in_3_2Apart_PD.stream().forEach((o) -> {
                     o.Rmc.add(d);

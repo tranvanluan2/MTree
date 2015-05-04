@@ -166,8 +166,10 @@ public class MTTest {
             System.out.println("Total #outliers: " + idOutliers.size());
             System.out.println("Average Time: "+ totalTime*1.0/numberWindows);
             System.out.println("Peak memory: "+ MesureMemoryThread.maxMemory* 1.0 / 1024 / 1024);
-            System.out.println("Time for index structure: "+ MesureMemoryThread.timeForIndexing*1.0/1000000000/numberWindows);
+            System.out.println("Time index, remove data from structure: "+ MesureMemoryThread.timeForIndexing*1.0/1000000000/numberWindows);
             System.out.println("Time for querying: "+MesureMemoryThread.timeForQuerying*1.0/1000000000/numberWindows);
+            System.out.println("Time for new slide: "+MesureMemoryThread.timeForNewSlide*1.0/1000000000/numberWindows);
+            System.out.println("Time for expired slide: "+MesureMemoryThread.timeForExpireSlide*1.0/1000000000/numberWindows);
             System.out.println("------------------------------------");
 
         }

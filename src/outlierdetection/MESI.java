@@ -16,7 +16,6 @@ import mtree.tests.Data;
 import mtree.utils.Constants;
 import mtree.utils.Pair;
 import mtree.utils.Utils;
-import mtree.tests.MeasureMemory;
 import mtree.tests.MesureMemoryThread;
 public class MESI {
 
@@ -29,8 +28,8 @@ public class MESI {
     public static int count = 0;
     public static int totalTrigger = 0;
     
-    public static double timeForNewSlide = 0;
-    public static double timeForExpireSlide = 0;
+    
+    
     
     public HashSet<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
 
@@ -58,7 +57,7 @@ public class MESI {
 
         }
         long currentCPUTime = Utils.getCPUTime();
-        MesureMemoryThread.timeForIndexing += currentCPUTime - startCPUTime;
+        MesureMemoryThread.timeForNewSlide +=currentCPUTime - startCPUTime;
         
         
         Thresh_LEAP(window);
@@ -84,6 +83,8 @@ public class MESI {
 
     public void Thresh_LEAP(Window window) {
         
+        long startTime = Utils.getCPUTime();
+        
         if (window.slides.size() <= Math.ceil(Constants.W * 1.0 / Constants.slide)) {
             window.slides.stream().forEach((s) -> {
                 s.points.stream().forEach((p) -> {
@@ -96,6 +97,9 @@ public class MESI {
             });
         }
         
+        MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
+        
+        startTime = Utils.getCPUTime();
         Slide expiredSlide = window.getExpiredSlide();
         
         if (expiredSlide != null) {
@@ -121,12 +125,11 @@ public class MESI {
                 });
             }
             
-            long startTime = Utils.getCPUTime();
-            
             expiredSlide.points.clear();
             
-            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
         }
+        
+        MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
         
 
     }
@@ -145,12 +148,10 @@ public class MESI {
 
             Slide s = window.slides.get(i);
             
-            long startTime = Utils.getCPUTime();
-
+            
             ArrayList<Data> neighbors = s.findNeighbors(p, Constants.k + 1);
             
-            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
-            MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime;
+            
             
             for (Data d : neighbors) {
                 if (d.arrivalTime != p.arrivalTime) {
@@ -298,23 +299,18 @@ class Slide {
         for(Data d: data){
             MESIObject d2 = new MESIObject(d, currentTime);
             points.add(d2);
-//            MTreeClass.Query query = mtree.getNearest(d);
-//            for (MTreeClass.ResultItem ri : query) {
-//                if(ri.distance == 0) 
-//                {
-//                    d2.values[0]+=(new Random()).nextDouble()/1000000;
-//                    break;
-//                }
-//            }
+            long startTime = Utils.getCPUTime();
             mtree.add(d2);
+            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
         }
     }
 
     public ArrayList<Data> findNeighbors(Data d, int k) {
         ArrayList<Data> result = new ArrayList<>();
+        long startTime = Utils.getCPUTime();
 
         MTreeClass.Query query = mtree.getNearest(d, Constants.R, k);
-
+        MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime;
         for (MTreeClass.ResultItem ri : query) {
             result.add(ri.data);
         }

@@ -13,6 +13,7 @@ import mtree.MTree;
 import mtree.PartitionFunctions;
 import mtree.PromotionFunction;
 import mtree.tests.Data;
+import mtree.tests.MesureMemoryThread;
 import mtree.utils.Constants;
 import mtree.utils.Pair;
 import mtree.utils.Utils;
@@ -30,6 +31,7 @@ public class ExactStorm {
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
         ArrayList<Data> outliers = new ArrayList<>();
 
+        long startTime = Utils.getCPUTime();
         /**
          * remove expired data from dataList and mtree
          */
@@ -40,7 +42,9 @@ public class ExactStorm {
                 // mark here for removing data from datalist later
                 index = i;
                 // remove from mtree
+                long startTime3 = Utils.getCPUTime();
                 mtree.remove(d);
+                MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime3;
             } else {
                 break;
             }
@@ -50,7 +54,9 @@ public class ExactStorm {
             dataList.remove(i);
         }
 
+        MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
         
+        startTime = Utils.getCPUTime();
         
         for (Data d : data) {
 
@@ -58,7 +64,9 @@ public class ExactStorm {
             /**
              * do range query for ob
              */
+            long startTime4 = Utils.getCPUTime();
             MTreeClass.Query query = mtree.getNearestByRange(ob, Constants.R);
+            MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime4;
 
             ArrayList<DataStormObject> queryResult = new ArrayList<>();
             for (MTreeClass.ResultItem ri : query) {
@@ -79,7 +87,9 @@ public class ExactStorm {
              * store object into mtree
              */
 //            Utils.computeUsedMemory();
+            long startTime2 = Utils.getCPUTime();
             mtree.add(ob);
+            MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime2;
 
             dataList.add(ob);
 
@@ -98,26 +108,7 @@ public class ExactStorm {
             }
         }); // System.out.println("#outliers: "+count_outlier);
 
-        // System.out.println("Outliers: ");
-        // for (Data o : outliers) {
-        // System.out.print(o.values[0] + " ; ");
-        // }
-        // System.out.println();
-        // System.out.println("Data list: ");
-        // for (Data o : dataList) {
-        // System.out.print(o.values[0] + " ; ");
-        // }
-        // System.out.println();
-//        Utils.computeUsedMemory();
-        
-        //count number of preceding neighbors 
-//        double numPre = 0;
-//        for(DataStormObject d: dataList){
-//            int pre = 0;
-//            pre = d.nn_before.stream().filter((nn_before) -> (nn_before.arrivalTime > currentTime - W)).map((_item) -> 1).reduce(pre, Integer::sum);
-//            numPre += pre;
-//        }
-//        numPre = numPre/dataList.size();
+        MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
         return outliers;
     
     }
