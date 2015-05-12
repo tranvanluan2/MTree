@@ -22,7 +22,7 @@ public class MESI {
     /**
      *
      */
-    public static HashSet<Data> outlierList = new HashSet<>();
+    public static ArrayList<Data> outlierList = new ArrayList<>();
     public static Window window = new Window();
     
     public static int count = 0;
@@ -31,8 +31,8 @@ public class MESI {
     
     
     
-    public HashSet<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
-
+    public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
+        outlierList = new ArrayList<>();
         long startCPUTime = Utils.getCPUTime();
         if (data.size() == Constants.W) {
             // split into slides
@@ -62,7 +62,8 @@ public class MESI {
         
         Thresh_LEAP(window);
 
-        
+        startCPUTime = Utils.getCPUTime();
+       
         for (int i = window.startSlide; i < window.slides.size(); i++) {
             if (i >= 0) {
                 for (MESIObject o : window.slides.get(i).points) {
@@ -72,6 +73,9 @@ public class MESI {
                 }
             }
         }
+         currentCPUTime = Utils.getCPUTime();
+        MesureMemoryThread.timeForNewSlide +=currentCPUTime - startCPUTime;
+        
         
         
 //         print_window();

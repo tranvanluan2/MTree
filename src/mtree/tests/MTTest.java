@@ -138,7 +138,7 @@ public class MTTest {
                     });
                     break;
                 case "mesi":
-                    HashSet<Data> outliers7 = mesi.detectOutlier(incomingData, currentTime, Constants.W,
+                    ArrayList<Data> outliers7 = mesi.detectOutlier(incomingData, currentTime, Constants.W,
                             Constants.slide);
                     elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
 
