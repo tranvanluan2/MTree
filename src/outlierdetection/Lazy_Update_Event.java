@@ -141,9 +141,11 @@ public class Lazy_Update_Event {
         }
         
       
-        while (x != null && x.ev <= currentTime) {
+        while (x != null && (x.ev <= currentTime || x.arrivalTime <= currentTime-Constants.W)) {
             x = eventQueue.extractMin().getKey();
+            
             links.remove(x);
+            
             
             if (x.p_neighbors.size() > 0 && x.expireTime > currentTime) {
                 while (x.p_neighbors.size() > 0 && x.p_neighbors.get(0).expireTime <= currentTime) {
@@ -153,13 +155,13 @@ public class Lazy_Update_Event {
                     } else x.ev = x.p_neighbors.get(0).expireTime;
                 }
 
-                if (x.p_neighbors.size() + x.numberSuccedingNeighbors < Constants.k) {
+                if (x.p_neighbors.size() + x.numberSuccedingNeighbors < Constants.k && x.arrivalTime > currentTime-Constants.W) {
                     outlierList.add(x);
 
                 } else if (x.p_neighbors.size() + x.numberSuccedingNeighbors >= Constants.k
-                        && x.numberSuccedingNeighbors < Constants.k && x.p_neighbors.size() > 0) {
+                        && x.numberSuccedingNeighbors < Constants.k && x.p_neighbors.size() > 0 && x.arrivalTime > currentTime-Constants.W) {
                     x.ev = x.p_neighbors.get(0).expireTime;
-                    if (x.ev > currentTime  && x.p_neighbors.size() > 0) {
+                    if (x.ev > currentTime  && x.p_neighbors.size() > 0 && x.arrivalTime > currentTime-Constants.W ) {
                         Node<DataLUEObject> node = eventQueue.insert(x);
                         links.put(x, node);
                     }

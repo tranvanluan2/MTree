@@ -24,40 +24,61 @@ public class ExactStorm {
     // store list id in increasing time arrival order
     public static ArrayList<DataStormObject> dataList = new ArrayList<>();
 
+    public double avgCurrentNeighbor = 0;
+    public static double avgAllWindowNeighbor = 0;
+
     public ExactStorm() {
 
     }
 
+    public static boolean isSameSlide(DataStormObject d1, DataStormObject d2) {
+        return (d1.arrivalTime - 1) / Constants.slide == (d2.arrivalTime - 1) / Constants.slide;
+    }
+
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
+
         ArrayList<Data> outliers = new ArrayList<>();
 
         long startTime = Utils.getCPUTime();
         /**
          * remove expired data from dataList and mtree
          */
-        int index = -1;
-        for (int i = 0; i < dataList.size(); i++) {
-            Data d = dataList.get(i);
-            if (d.arrivalTime <= currentTime - W) {
-                // mark here for removing data from datalist later
-                index = i;
-                // remove from mtree
-                long startTime3 = Utils.getCPUTime();
-                mtree.remove(d);
-                MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime3;
-            } else {
-                break;
+        if (slide != W) {
+            int index = -1;
+            for (int i = 0; i < dataList.size(); i++) {
+                DataStormObject d = dataList.get(i);
+                if (d.arrivalTime <= currentTime - W) {
+                    // mark here for removing data from datalist later
+                    index = i;
+                    // remove from mtree
+//                for(DataStormObject d2: dataList){
+//                    if(d2.arrivalTime > d.arrivalTime){
+//                        if(d2.nn_before.contains(d))
+//                            d2.nn_before.remove(d);
+//                    }
+//                }
+                    long startTime3 = Utils.getCPUTime();
+                    mtree.remove(d);
+                    d.nn_before.clear();
+                    MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime3;
+                } else {
+                    break;
+                }
             }
-        }
-        for (int i = index; i >= 0; i--) {
+            for (int i = index; i >= 0; i--) {
 
-            dataList.remove(i);
-        }
+                dataList.remove(i);
+            }
+        } else {
+            dataList.clear();
+            mtree = null;
+            mtree = new MTreeClass();
 
+        }
         MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
-        
+
         startTime = Utils.getCPUTime();
-        
+
         for (Data d : data) {
 
             DataStormObject ob = new DataStormObject(d);
@@ -71,13 +92,22 @@ public class ExactStorm {
             ArrayList<DataStormObject> queryResult = new ArrayList<>();
             for (MTreeClass.ResultItem ri : query) {
                 queryResult.add((DataStormObject) ri.data);
-                if (ri.distance == 0) ob.values[0] += (new Random()).nextDouble() / 1000000;
+                if (ri.distance == 0) {
+                    ob.values[0] += (new Random()).nextDouble() / 1000000;
+                }
             }
 
             Collections.sort(queryResult, new DataStormComparator());
 
-            queryResult.stream().filter((dod) -> (dod.arrivalTime >= currentTime - Constants.W)).filter((dod) -> (dod != null)).map((dod) -> {
-                if (ob.nn_before.size() < Constants.k) ob.nn_before.add(dod);
+            queryResult.stream().filter((dod) -> (dod.arrivalTime > currentTime - Constants.W)).filter((dod) -> (dod != null)).map((dod) -> {
+                if (isSameSlide(dod, ob)) {
+                    ob.count_after++;
+                } else {
+
+                    if (ob.nn_before.size() < Constants.k) {
+                        ob.nn_before.add(0, dod);
+                    }
+                }
                 return dod;
             }).forEach((dod) -> {
                 dod.count_after++;
@@ -108,41 +138,50 @@ public class ExactStorm {
             }
         }); // System.out.println("#outliers: "+count_outlier);
 
+        //count the avg length of neighbors list
+        for (DataStormObject d : dataList) {
+            avgCurrentNeighbor += d.nn_before.size();
+        }
+        avgCurrentNeighbor = avgCurrentNeighbor / dataList.size();
+        avgAllWindowNeighbor += avgCurrentNeighbor;
+
         MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
         return outliers;
-    
+
     }
-    
-    public void processFirstWindow(ArrayList<Data> data, int currentTime, int W, int slide){
-       for(Data d: data){
-           DataStormObject ob = new DataStormObject(d);
-           mtree.add(ob);
-           dataList.add(ob);
-       }
-       for(DataStormObject d: dataList){
+
+    public void processFirstWindow(ArrayList<Data> data, int currentTime, int W, int slide) {
+        for (Data d : data) {
+            DataStormObject ob = new DataStormObject(d);
+            mtree.add(ob);
+            dataList.add(ob);
+        }
+        for (DataStormObject d : dataList) {
             MTreeClass.Query query = mtree.getNearestByRange(d, Constants.R);
 
             ArrayList<DataStormObject> queryResult = new ArrayList<>();
             for (MTreeClass.ResultItem ri : query) {
                 queryResult.add((DataStormObject) ri.data);
-                if (ri.distance == 0) d.values[0] += (new Random()).nextDouble() / 1000000;
+                if (ri.distance == 0) {
+                    d.values[0] += (new Random()).nextDouble() / 1000000;
+                }
             }
 
             Collections.sort(queryResult, new DataStormComparator());
-            for(DataStormObject dob: queryResult){ 
-            
-                if(dob.arrivalTime >= d.arrivalTime) d.count_after ++;
-                else if(dob.arrivalTime >= currentTime -Constants.W && dob.arrivalTime < d.arrivalTime){
-                    if(d.nn_before.size() < Constants.k) 
+            for (DataStormObject dob : queryResult) {
+
+                if (dob.arrivalTime >= d.arrivalTime) {
+                    d.count_after++;
+                } else if (dob.arrivalTime >= currentTime - Constants.W && dob.arrivalTime < d.arrivalTime) {
+                    if (d.nn_before.size() < Constants.k) {
                         d.nn_before.add(dob);
+                    }
                 }
             }
-            
-       }
+
+        }
     }
 }
-
-
 
 class MTreeClass extends MTree<Data> {
 
@@ -154,7 +193,7 @@ class MTreeClass extends MTree<Data> {
     };
 
     MTreeClass() {
-        super(2, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<Data>(nonRandomPromotion,
+        super(25, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<Data>(nonRandomPromotion,
                 new PartitionFunctions.BalancedPartition<Data>()));
     }
 
@@ -175,15 +214,21 @@ class MTreeClass extends MTree<Data> {
 };
 
 class DataStormComparator implements Comparator<DataStormObject> {
+
     @Override
     public int compare(DataStormObject o1, DataStormObject o2) {
-        if (o1.arrivalTime < o2.arrivalTime) return 1;
-        else if (o1.arrivalTime == o2.arrivalTime) return 0;
-        else return -1;
+        if (o1.arrivalTime < o2.arrivalTime) {
+            return 1;
+        } else if (o1.arrivalTime == o2.arrivalTime) {
+            return 0;
+        } else {
+            return -1;
+        }
     }
 };
 
 class DataStormObject extends Data {
+
     public int count_after;
     public ArrayList<DataStormObject> nn_before;
 

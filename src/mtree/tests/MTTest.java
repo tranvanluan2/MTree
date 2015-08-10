@@ -19,6 +19,7 @@ import mtree.utils.Constants;
 import mtree.utils.Utils;
 import outlierdetection.DataLUEObject;
 import outlierdetection.MESIWithHash;
+import outlierdetection.MicroCluster_New;
 
 public class MTTest {
 
@@ -50,23 +51,25 @@ public class MTTest {
         Lazy_Update_Event lue = new Lazy_Update_Event();
         Direct_Update_Event due = new Direct_Update_Event();
         MicroCluster micro = new MicroCluster();
+        MicroCluster_New mcnew = new MicroCluster_New();
         MESI mesi = new MESI();
         MESIWithHash mesiWithHash = new MESIWithHash();
         int numberWindows = 0;
         double totalTime = 0;
-        while (!stop && s.hasNext()) {
+        while (!stop ) {
 
-            numberWindows++;
             if (Constants.numberWindow != -1 && numberWindows > Constants.numberWindow) {
                 break;
             }
+            numberWindows++;
+            
 
             ArrayList<Data> incomingData;
             if (currentTime != 0) {
-                incomingData = s.getIncomingData(currentTime, Constants.slide);
+                incomingData = s.getIncomingData(currentTime, Constants.slide, Constants.dataFile);
                 currentTime = currentTime + Constants.slide;
             } else {
-                incomingData = s.getIncomingData(currentTime, Constants.W);
+                incomingData = s.getIncomingData(currentTime, Constants.W, Constants.dataFile);
                 currentTime = currentTime + Constants.W;
             }
 
@@ -84,6 +87,7 @@ public class MTTest {
                     outliers.stream().forEach((outlier) -> {
                         idOutliers.add(outlier.arrivalTime);
                     });
+
                     break;
                 case "approximateStorm":
                     ArrayList<Data> outliers2 = apStorm.detectOutlier(incomingData, currentTime, Constants.W,
@@ -136,6 +140,29 @@ public class MTTest {
                         idOutliers.add(outlier.arrivalTime);
 
                     });
+                    
+                    break;
+                case "microCluster_new":
+                    ArrayList<Data> outliers9 = mcnew.detectOutlier(incomingData, currentTime, Constants.W,
+                            Constants.slide);
+                    elapsedTimeInSec = (Utils.getCPUTime() - start) * 1.0 / 1000000000;
+
+                    totalTime += elapsedTimeInSec;
+                    outliers9.stream().forEach((outlier) -> {
+                        idOutliers.add(outlier.arrivalTime);
+
+                    });
+                    
+//                    ArrayList<Data> outliers10 = estorm.detectOutlier(incomingData, currentTime, Constants.W,
+//                            Constants.slide);
+//                    
+//                    System.out.println("--------------------------------------------------");
+//                    System.out.println("Not in exact storm");
+//                    for(Data d: outliers9){
+//                        if(!outliers10.contains(d))
+//                            System.out.println(d.arrivalTime);
+//                    }
+//                    System.out.println("---------------------------------------------------");
                     break;
                 case "mesi":
                     ArrayList<Data> outliers7 = mesi.detectOutlier(incomingData, currentTime, Constants.W,
@@ -159,32 +186,72 @@ public class MTTest {
                     break;
 
             }
-
-            
-
+                        if (numberWindows == 1) {
+                totalTime = 0;
+                MesureMemoryThread.timeForIndexing = 0;
+                MesureMemoryThread.timeForNewSlide =0;
+                 MesureMemoryThread.timeForExpireSlide = 0;
+            }
             System.out.println("#window: " + numberWindows);
             System.out.println("Total #outliers: " + idOutliers.size());
-            System.out.println("Average Time: "+ totalTime*1.0/numberWindows);
-            System.out.println("Peak memory: "+ MesureMemoryThread.maxMemory* 1.0 / 1024 / 1024);
-            System.out.println("Time index, remove data from structure: "+ MesureMemoryThread.timeForIndexing*1.0/1000000000/numberWindows);
-            System.out.println("Time for querying: "+MesureMemoryThread.timeForQuerying*1.0/1000000000/numberWindows);
-            System.out.println("Time for new slide: "+MesureMemoryThread.timeForNewSlide*1.0/1000000000/numberWindows);
-            System.out.println("Time for expired slide: "+MesureMemoryThread.timeForExpireSlide*1.0/1000000000/numberWindows);
+            System.out.println("Average Time: " + totalTime * 1.0 / numberWindows);
+            System.out.println("Peak memory: " + MesureMemoryThread.maxMemory * 1.0 / 1024 / 1024);
+            System.out.println("Time index, remove data from structure: " + MesureMemoryThread.timeForIndexing * 1.0 / 1000000000 / numberWindows);
+            System.out.println("Time for querying: " + MesureMemoryThread.timeForQuerying * 1.0 / 1000000000 / numberWindows);
+            System.out.println("Time for new slide: " + MesureMemoryThread.timeForNewSlide * 1.0 / 1000000000 / numberWindows);
+            System.out.println("Time for expired slide: " + MesureMemoryThread.timeForExpireSlide * 1.0 / 1000000000 / numberWindows);
             System.out.println("------------------------------------");
 
+
+
+            if (algorithm.equals("exactStorm")) {
+                
+                System.out.println("Avg neighbor list length = " + ExactStorm.avgAllWindowNeighbor/numberWindows);
+            } else if (algorithm.equals("mesi")) {
+                
+                System.out.println("Avg trigger list = " + MESI.avgAllWindowTriggerList/numberWindows);
+                System.out.println("Avg neighbor list = "+ MESI.avgAllWindowNeighborList/numberWindows);
+            } else if (algorithm.equals("microCluster")) {
+                
+                System.out.println("Number clusters = " + MicroCluster.numberCluster/numberWindows);
+                System.out.println("Max  Number points in event queue = " + MicroCluster.numberPointsInEventQueue);
+
+                System.out.println("Avg number points in clusters= "+MicroCluster.numberPointsInClustersAllWindows/numberWindows);
+                System.out.println("Avg Rmc size = " + MicroCluster.avgPointsInRmcAllWindows/numberWindows);
+                System.out.println("Avg Length exps= " + MicroCluster.avgLengthExpsAllWindows/numberWindows);
+            } else if (algorithm.equals("due")) {
+//            Direct_Update_Event.numberPointsInEventQueue = Direct_Update_Event.numberPointsInEventQueue /numberWindows;
+                Direct_Update_Event.avgAllWindowNumberPoints = Direct_Update_Event.numberPointsInEventQueue;
+                System.out.println("max #points in event queue = " + Direct_Update_Event.avgAllWindowNumberPoints);
+            }
+            if (algorithm.equals("microCluster_new")) {
+                System.out.println("avg points in clusters = "+MicroCluster_New.avgNumPointsInClusters *1.0/numberWindows);
+                System.out.println("Avg points in event queue = "+ MicroCluster_New.avgNumPointsInEventQueue*1.0/numberWindows);
+                System.out.println("avg neighbor list length = "+ MicroCluster_New.avgNeighborListLength*1.0/numberWindows);
+            }
         }
+        
+//       
+//        Constants.numberWindow--;
 
-        mesureThread.averageTime = totalTime * 1.0 / numberWindows;
-
+        
+        
+        ExactStorm.avgAllWindowNeighbor = ExactStorm.avgAllWindowNeighbor / numberWindows;
+        MESI.avgAllWindowTriggerList = MESI.avgAllWindowTriggerList / numberWindows;
+        MicroCluster.numberCluster = MicroCluster.numberCluster / numberWindows;
+        MicroCluster.avgPointsInRmcAllWindows = MicroCluster.avgPointsInRmcAllWindows / numberWindows;
+        MicroCluster.avgLengthExpsAllWindows = MicroCluster.avgLengthExpsAllWindows / numberWindows;
+        MicroCluster.numberPointsInClustersAllWindows = MicroCluster.numberPointsInClustersAllWindows/numberWindows;
+        MicroCluster_New.avgNumPointsInClusters = MicroCluster_New.avgNumPointsInClusters/numberWindows;
+        mesureThread.averageTime = totalTime * 1.0 / (numberWindows-1);
         mesureThread.writeResult();
         mesureThread.stop();
         mesureThread.interrupt();
-        
-        
+
         /**
          * Write result to file
          */
-        if(!"".equals(Constants.resultFile)){
+        if (!"".equals(Constants.resultFile)) {
             writeResult();
         }
 //      
@@ -236,7 +303,7 @@ public class MTTest {
     public static void writeResult() {
 
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(Constants.resultFile, true)))) {
-            for(Integer time: idOutliers){
+            for (Integer time : idOutliers) {
                 out.println(time);
             }
         } catch (IOException e) {

@@ -17,21 +17,32 @@ import mtree.utils.Constants;
 import mtree.utils.Pair;
 import mtree.utils.Utils;
 import mtree.tests.MesureMemoryThread;
+
 public class MESI {
 
     /**
      *
      */
-    public static ArrayList<Data> outlierList = new ArrayList<>();
+    public static ArrayList<Data> outlierList;
     public static Window window = new Window();
-    
+
     public static int count = 0;
     public static int totalTrigger = 0;
-    
-    
-    
-    
+
+    public double avgTriggerListLength = 0;
+    public static double avgAllWindowTriggerList = 0;
+
+    public static double avgNeighborList = 0;
+    public static double avgAllWindowNeighborList = 0;
+
     public ArrayList<Data> detectOutlier(ArrayList<Data> data, int currentTime, int W, int slide) {
+
+        //clear points in expiring slide
+        Slide expiringSlide = window.getExpiringSlide();
+        if (expiringSlide != null) {
+            expiringSlide.points.clear();
+            expiringSlide.mtree = null;
+        }
         outlierList = new ArrayList<>();
         long startCPUTime = Utils.getCPUTime();
         if (data.size() == Constants.W) {
@@ -57,13 +68,12 @@ public class MESI {
 
         }
         long currentCPUTime = Utils.getCPUTime();
-        MesureMemoryThread.timeForNewSlide +=currentCPUTime - startCPUTime;
-        
-        
+        MesureMemoryThread.timeForNewSlide += currentCPUTime - startCPUTime;
+
         Thresh_LEAP(window);
 
         startCPUTime = Utils.getCPUTime();
-       
+
         for (int i = window.startSlide; i < window.slides.size(); i++) {
             if (i >= 0) {
                 for (MESIObject o : window.slides.get(i).points) {
@@ -73,22 +83,41 @@ public class MESI {
                 }
             }
         }
-         currentCPUTime = Utils.getCPUTime();
-        MesureMemoryThread.timeForNewSlide +=currentCPUTime - startCPUTime;
-        
-        
-        
+        currentCPUTime = Utils.getCPUTime();
+        MesureMemoryThread.timeForNewSlide += currentCPUTime - startCPUTime;
+
+        //comput avg trigger list
+        int count2 = 0;
+        int count3 = 0;
+        for (int i = window.startSlide; i < window.slides.size(); i++) {
+            if (i >= 0) {
+                count2++;
+                avgTriggerListLength += window.slides.get(i).triggered.size();
+                for (MESIObject o : window.slides.get(i).points) {
+                    avgNeighborList += o.preEvidence.size();
+                    count3++;
+                }
+            }
+        }
+        if (count3 > 0) {
+            avgNeighborList = avgNeighborList / count3;
+            avgAllWindowNeighborList += avgNeighborList;
+        }
+        if (count2 > 0) {
+            avgTriggerListLength = avgTriggerListLength / count2;
+            avgAllWindowTriggerList += avgTriggerListLength;
+        }
 //         print_window();
 //         print_outlier();
-        
+
         return outlierList;
 
     }
 
     public void Thresh_LEAP(Window window) {
-        
+
         long startTime = Utils.getCPUTime();
-        
+
         if (window.slides.size() <= Math.ceil(Constants.W * 1.0 / Constants.slide)) {
             window.slides.stream().forEach((s) -> {
                 s.points.stream().forEach((p) -> {
@@ -100,16 +129,16 @@ public class MESI {
                 LEAP(p, window);
             });
         }
-        
+
         MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
-        
+
         startTime = Utils.getCPUTime();
         Slide expiredSlide = window.getExpiredSlide();
-        
+
         if (expiredSlide != null) {
-            
-            count ++;
-            totalTrigger +=expiredSlide.triggered.size();
+
+            count++;
+            totalTrigger += expiredSlide.triggered.size();
             /**
              * clear expired slides
              */
@@ -119,22 +148,21 @@ public class MESI {
                 }
             }
 
-            if (expiredSlide.triggered != null) {
-                expiredSlide.triggered.stream().filter((p) -> (!p.isSafe)).map((p) -> {
-                    p.expireEvidence(expiredSlide, window);
-                    return p;
-                }).forEach((p) -> {
-                    // compute skipped slide for p
-                    LEAP(p, p.getSkippedPoints(window, expiredSlide));
-                });
-            }
-            
+            expiredSlide.triggered.stream().filter((p) -> (!p.isSafe)).map((p) -> {
+                p.expireEvidence(expiredSlide, window);
+                return p;
+            }).forEach((p) -> {
+                // compute skipped slide for p
+                LEAP(p, p.getSkippedPoints(window, expiredSlide));
+            });
+
             expiredSlide.points.clear();
-            
+            expiredSlide.triggered.clear();
+            expiredSlide.mtree = null;
+//            expiredSlide = null;
         }
-        
+
         MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
-        
 
     }
 
@@ -151,12 +179,9 @@ public class MESI {
         for (int i = currentSlideIndex; i <= window.getNewestSlide().id; i++) {
 
             Slide s = window.slides.get(i);
-            
-            
+
             ArrayList<Data> neighbors = s.findNeighbors(p, Constants.k + 1);
-            
-            
-            
+
             for (Data d : neighbors) {
                 if (d.arrivalTime != p.arrivalTime) {
                     p.lastLEAPSlide = i;
@@ -165,9 +190,11 @@ public class MESI {
                         p.isOutlier = false;
 
                         if (p.numSucEvidence >= Constants.k) {
+
                             p.isSafe = true;
+                            return isOutlier;
                         }
-                        return isOutlier;
+
                     }
                 }
             }
@@ -200,7 +227,11 @@ public class MESI {
                             p.updatePrecEvidence(slide);
                             if (p.isMESIAquired() == true) {
                                 p.isOutlier = false;
-                                p.isSafe = false;
+                                if (p.numSucEvidence < Constants.k) {
+                                    p.isSafe = false;
+                                } else {
+                                    p.isSafe = true;
+                                }
                                 slide.updateTriggeredList(p);
                                 return isOutlier;
                             }
@@ -265,6 +296,14 @@ class Window {
 
     }
 
+    public Slide getExpiringSlide() {
+        if (slides.size() < Constants.W / Constants.slide) {
+            return null;
+        } else {
+            return slides.get(getNewestSlide().id - Constants.W / Constants.slide + 1);
+        }
+    }
+
     public Slide getExpiredSlide() {
 
         if (slides.size() <= Constants.W / Constants.slide) {
@@ -300,25 +339,30 @@ class Slide {
     public MESIMTreeClass mtree = new MESIMTreeClass();
 
     public Slide(ArrayList<Data> data, int currentTime) {
-        for(Data d: data){
+
+        for (Data d : data) {
+
             MESIObject d2 = new MESIObject(d, currentTime);
             points.add(d2);
             long startTime = Utils.getCPUTime();
             mtree.add(d2);
             MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - startTime;
         }
+
     }
 
     public ArrayList<Data> findNeighbors(Data d, int k) {
         ArrayList<Data> result = new ArrayList<>();
         long startTime = Utils.getCPUTime();
 
-        MTreeClass.Query query = mtree.getNearest(d, Constants.R, k);
-        MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime;
-        for (MTreeClass.ResultItem ri : query) {
-            result.add(ri.data);
-        }
+        if (mtree != null) {
+            MTreeClass.Query query = mtree.getNearest(d, Constants.R, k);
+            MesureMemoryThread.timeForQuerying += Utils.getCPUTime() - startTime;
+            for (MTreeClass.ResultItem ri : query) {
+                result.add(ri.data);
+            }
 
+        }
         return result;
     }
 
@@ -348,7 +392,7 @@ class MESIMTreeClass extends MTree<Data> {
     };
 
     MESIMTreeClass() {
-        super(2, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<Data>(nonRandomPromotion,
+        super(25, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<Data>(nonRandomPromotion,
                 new PartitionFunctions.BalancedPartition<Data>()));
     }
 
@@ -408,6 +452,9 @@ class MESIObject extends Data {
 //        this.preEvidence.remove(s);
         if (preEvidence.get(s) != null) {
             this.numPreEvidence -= preEvidence.get(s);
+            if (this.numPreEvidence < 0) {
+                this.numPreEvidence = 0;
+            }
         } else {
         }
         if (!this.isMESIAquired()) {

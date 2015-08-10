@@ -21,7 +21,7 @@ public class DataLUEObject implements EuclideanCoordinate, Comparable<DataLUEObj
     public int expireTime;
     public int numberSuccedingNeighbors;
     public int ev;
-    public ArrayList<DataLUEObject> p_neighbors = new ArrayList<DataLUEObject>();
+    public ArrayList<DataLUEObject> p_neighbors = new ArrayList<>();
     public int arrivalTime;
     public double[] values;
     public final int hashCode;
@@ -31,11 +31,11 @@ public class DataLUEObject implements EuclideanCoordinate, Comparable<DataLUEObj
         this.expireTime = d.arrivalTime + Constants.W;
         this.values = d.values;
         this.arrivalTime = d.arrivalTime;
-        int hashCode = 1;
+        int hashcode2 = 1;
         for (double value : values) {
-            hashCode = 31 * hashCode + (int) value + (new Random()).nextInt(100000);
+            hashcode2 = 31 * hashcode2 + (int) value + (new Random()).nextInt(100000);
         }
-        this.hashCode = hashCode;
+        this.hashCode = hashcode2;
 
     }
 
@@ -92,7 +92,7 @@ class MTreeClassLUE extends MTree<DataLUEObject> {
     };
 
     MTreeClassLUE() {
-        super(2, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<DataLUEObject>(nonRandomPromotion,
+        super(25, DistanceFunctions.EUCLIDEAN, new ComposedSplitFunction<DataLUEObject>(nonRandomPromotion,
                 new PartitionFunctions.BalancedPartition<DataLUEObject>()));
     }
 

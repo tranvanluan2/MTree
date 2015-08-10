@@ -1,4 +1,4 @@
-   package outlierdetection;
+package outlierdetection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,29 +29,36 @@ public class AbstractC {
         /**
          * remove expired data from dataList and mtree
          */
-        int index = -1;
-        for (int i = 0; i < dataList.size(); i++) {
-            DataAbtractCObject d = dataList.get(i);
-            if (d.arrivalTime <= currentTime - W) {
-                // mark here for removing data from datalist later
-                index = i;
-                // remove from mtree
-                long start4 = Utils.getCPUTime();
-                mtree.remove(d);
-                MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - start4;
-                // System.out.println(t);
+        if (slide != W) {
+            int index = -1;
+            for (int i = 0; i < dataList.size(); i++) {
+                DataAbtractCObject d = dataList.get(i);
+                if (d.arrivalTime <= currentTime - W) {
+                    // mark here for removing data from datalist later
+                    index = i;
+                    // remove from mtree
+                    long start4 = Utils.getCPUTime();
+                    mtree.remove(d);
+                    MesureMemoryThread.timeForIndexing += Utils.getCPUTime() - start4;
+                    // System.out.println(t);
 
-            } else {
-                break;
+                } else {
+                    break;
+                }
+            }
+            for (int i = index; i >= 0; i--) {
+
+                dataList.remove(i);
             }
         }
-        for (int i = index; i >= 0; i--) {
-
-            dataList.remove(i);
+        else{
+            dataList.clear();
+            mtree = null;
+            mtree = new MTreeClass();
         }
-        
+
         MesureMemoryThread.timeForExpireSlide += Utils.getCPUTime() - startTime;
-        
+
         startTime = Utils.getCPUTime();
 
         data.stream().map((d) -> new DataAbtractCObject(d, currentTime)).map((DataAbtractCObject dac) -> {
@@ -78,9 +85,10 @@ public class AbstractC {
                         object.lt_cnt.set(n, object.lt_cnt.get(n) + 1);
                         dac.lt_cnt.set(n, dac.lt_cnt.get(n) + 1);
                     }
-                    
+
                 }
             }
+
             return dac;
         }).map((dac) -> {
             /**
@@ -95,7 +103,6 @@ public class AbstractC {
 
 //            Utils.computeUsedMemory();
         });
-        
 
         // do outlier detection
         dataList.stream().map((d) -> {
@@ -113,7 +120,7 @@ public class AbstractC {
                 d.lt_cnt.remove(0);
             }
         });
-        
+
         MesureMemoryThread.timeForNewSlide += Utils.getCPUTime() - startTime;
         return outliers;
     }
@@ -128,7 +135,7 @@ class DataAbtractCObject extends Data {
         super();
         this.arrivalTime = d.arrivalTime;
         this.values = d.values;
-        int lifespan = (int) Math.ceil((arrivalTime - currentTime + Constants.W) * 1.0 / Constants.slide);
+        int lifespan = Constants.W / Constants.slide;
         lt_cnt = new ArrayList<>(Collections.nCopies(lifespan, 0));
     }
 

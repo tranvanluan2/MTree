@@ -19,8 +19,14 @@ import java.lang.management.ThreadMXBean;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static mtree.tests.MTTest.algorithm;
 import mtree.utils.Constants;
 import mtree.utils.Utils;
+import outlierdetection.Direct_Update_Event;
+import outlierdetection.ExactStorm;
+import outlierdetection.MESI;
+import outlierdetection.MicroCluster;
+import outlierdetection.MicroCluster_New;
 
 /**
  *
@@ -91,7 +97,24 @@ public class MesureMemoryThread extends Thread {
             out.println("Time for querying: "+ MesureMemoryThread.timeForQuerying*1.0/1000000000/Constants.numberWindow);
             out.println("Time for new slide: "+ MesureMemoryThread.timeForNewSlide*1.0/1000000000/Constants.numberWindow);
             out.println("Time for expired slide: "+ MesureMemoryThread.timeForExpireSlide*1.0/1000000000/Constants.numberWindow);
-
+            if(MTTest.algorithm.equals("exactStorm")){
+                out.println("Ave length of neighbors = "+ExactStorm.avgAllWindowNeighbor);
+            }
+            else if(MTTest.algorithm.equals("mesi")){
+                out.println("avg trigger length = "+ MESI.avgAllWindowTriggerList);
+            }
+            else if(MTTest.algorithm.equals("microCluster")){
+                out.println("Number cluster = "+ MicroCluster.numberCluster);
+                out.println("Number points in event queue = "+ MicroCluster.numberPointsInEventQueue);
+                out.println("Avg Rmc size = " + MicroCluster.avgPointsInRmcAllWindows);
+                out.println("Avg Length exps= "+ MicroCluster.avgLengthExpsAllWindows);
+            }
+            else if(MTTest.algorithm.equals("due")){
+                out.println("max #points in event queue = "+ Direct_Update_Event.avgAllWindowNumberPoints);
+            }
+            else if(MTTest.algorithm.equals("microCluster_new")){
+                out.println("max #points in clusters = "+ MicroCluster_New.avgNumPointsInClusters);
+            }
         } catch (IOException e) {
         }
     }

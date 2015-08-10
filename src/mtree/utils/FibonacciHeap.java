@@ -12,7 +12,7 @@ import java.util.Queue;
 public class FibonacciHeap<T extends Comparable<T>> {
 
     private Node<T> minNode;
-    private int size;
+    public int size;
 
     public FibonacciHeap() {
         minNode = null;

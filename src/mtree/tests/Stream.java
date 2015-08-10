@@ -13,143 +13,156 @@ import java.util.Random;
 import mtree.utils.Constants;
 
 public class Stream {
-    
-    
-    PriorityQueue<Data> streams ;
-    
+
+    PriorityQueue<Data> streams;
+
     public static Stream streamInstance;
-    
-    public static Stream getInstance(String type){
-        
-        
-        if(streamInstance!= null)
+
+    public static Stream getInstance(String type) {
+
+        if (streamInstance != null) {
             return streamInstance;
-        else if(!Constants.dataFile.trim().equals("")){
+        } else if (!Constants.dataFile.trim().equals("")) {
             streamInstance = new Stream();
-            streamInstance.getData(Constants.dataFile);
+//            streamInstance.getData(Constants.dataFile);
             return streamInstance;
-        }
-        return null;
-        /**
-        else if("ForestCover".equals(type))
-        {
+        } 
+        else if ("ForestCover".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.forestCoverFileName);
             return streamInstance;
-        }
-        else if("TAO".equals(type))
-        {
+        } else if ("TAO".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.taoFileName);
             return streamInstance;
-        }
-        else if("randomData".equals(type))
-        {
+        } else if ("randomData".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName1111);
             return streamInstance;
-        }
-        else if("randomData0.001".equals(type))
-        {
+        } else if ("randomData0.001".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName001);
             return streamInstance;
-        }
-        else if("randomData0.01".equals(type))
-        {
+        } else if ("randomData0.01".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName01);
             return streamInstance;
-        }
-        else if("randomData0.1".equals(type))
-        {
+        } else if ("randomData0.1".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName1);
             return streamInstance;
-        }
-        else if("randomData1".equals(type))
-        {
+        } else if ("randomData1".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName1percent);
             return streamInstance;
-        }
-        else if("randomData10".equals(type))
-        {
+        } else if ("randomData10".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.randomFileName10percent);
             return streamInstance;
-        }
-        else if("tagData".equals(type))
-        {
+        } else if ("tagData".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.tagCALC);
             return streamInstance;
-        }
-        else if("Trade".equals(type))
-        {
+        } else if ("Trade".equals(type)) {
             streamInstance = new Stream();
             streamInstance.getData(Constants.STT);
             return streamInstance;
-        }
-        else {
+        } else {
             streamInstance = new Stream();
             streamInstance.getRandomInput(1000, 10);
             return streamInstance;
-            
+
         }
-        */
+
     }
-    
-    
-    public boolean hasNext(){
+
+    public boolean hasNext() {
         return !streams.isEmpty();
     }
-    public ArrayList<Data> getIncomingData(int currentTime, int length){
+
+    public ArrayList<Data> getIncomingData(int currentTime, int length, String filename) {
+
+        
+        ArrayList<Data> results = new ArrayList<>();
+        try {
+            BufferedReader bfr = new BufferedReader(new FileReader(new File(filename)));
+
+            String line = "";
+            int time = 0;
+            try {
+                while ((line = bfr.readLine()) != null) {
+                    time++;
+                    if (time > currentTime && time <= currentTime + length) {
+                        String[] atts = line.split(",");
+                        double[] d = new double[atts.length];
+                        for (int i = 0; i < d.length; i++) {
+
+                            d[i] = Double.valueOf(atts[i]) + (new Random()).nextDouble() / 10000000;
+                        }
+                        Data data = new Data(d);
+                        data.arrivalTime = time;
+                        results.add(data);
+                    }
+                }
+                bfr.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    public ArrayList<Data> getIncomingData(int currentTime, int length) {
         ArrayList<Data> results = new ArrayList<Data>();
         Data d = streams.peek();
-        while(d!=null && d.arrivalTime > currentTime
-                && d.arrivalTime <= currentTime+length){
+        while (d != null && d.arrivalTime > currentTime
+                && d.arrivalTime <= currentTime + length) {
             results.add(d);
             streams.poll();
             d = streams.peek();
-            
+
         }
         return results;
-        
+
     }
-    public void getRandomInput(int length, int range){
-        
+
+    public void getRandomInput(int length, int range) {
+
         Random r = new Random();
-        for(int i=1; i<=length; i++){
-            double  d = r.nextInt(range);
+        for (int i = 1; i <= length; i++) {
+            double d = r.nextInt(range);
             Data data = new Data(d);
             data.arrivalTime = i;
             streams.add(data);
-            
+
         }
-        
+
     }
-    
-    public void getData(String filename){
-        
+
+    public void getData(String filename) {
+
         try {
             BufferedReader bfr = new BufferedReader(new FileReader(new File(filename)));
-        
+
             String line = "";
-            int time =1 ;
+            int time = 1;
             try {
-                while((line = bfr.readLine())!=null){
-                    
+                while ((line = bfr.readLine()) != null) {
+
                     String[] atts = line.split(",");
-                    double[] d  = new double[atts.length];
-                    for(int i = 0; i < d.length; i++){
-                        
-                        d[i] = Double.valueOf(atts[i])+(new Random()).nextDouble()/10000000;
+                    double[] d = new double[atts.length];
+                    for (int i = 0; i < d.length; i++) {
+
+                        d[i] = Double.valueOf(atts[i]) + (new Random()).nextDouble() / 10000000;
                     }
                     Data data = new Data(d);
                     data.arrivalTime = time;
                     streams.add(data);
-                    time ++;
+                    time++;
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -159,30 +172,30 @@ public class Stream {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
     }
-    public Stream(){
+
+    public Stream() {
         Comparator<Data> comparator = new DataComparator();
-        
-        streams = new PriorityQueue<Data>(comparator);
-        
-        
+
+//        streams = new PriorityQueue<Data>(comparator);
+
     }
 
 }
 
-class DataComparator implements Comparator<Data>{
-    
+class DataComparator implements Comparator<Data> {
+
     @Override
-    public int compare(Data x, Data y)
-    {
-        if(x.arrivalTime < y.arrivalTime)
+    public int compare(Data x, Data y) {
+        if (x.arrivalTime < y.arrivalTime) {
             return -1;
-        else if(x.arrivalTime > y.arrivalTime)
+        } else if (x.arrivalTime > y.arrivalTime) {
             return 1;
-        else return 0;
-        
-    
+        } else {
+            return 0;
+        }
+
     }
-    
+
 }
